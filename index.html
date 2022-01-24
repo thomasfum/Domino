@@ -30,7 +30,7 @@
     </style>
 
     <script>
-      //const { Project, Scene3D, PhysicsLoader, THREE } = ENABLE3D
+      //const { Project, Scene3D, Canvas,PhysicsLoader, THREE } = ENABLE3D
 	   const { enable3d, Scene3D, Canvas,THREE  } = ENABLE3D
 	   class MainScene extends Scene3D {
         constructor() {
@@ -45,22 +45,50 @@
 		   
         }
 
-        preload() {
+        preload() 
+		{
           console.log('preload')
 		   // (not this.load.svg)
 		   this.load.html('bridge', '/assets/svg/bridge2.svg')
         }
 
-        create() {
-          console.log('create')
 
-          // set up scene (light, ground, grid, sky, orbitControls)
-          this.third.warpSpeed('-ground')
-		  //this.third.warpSpeed()
+		AddBall(chainStartX, chainStartY, chainStartZ){
+			
+			const nbTorus=12
+			
+			//feet
+			this.third.add.box({ x:chainStartX+((nbTorus-0)*0.45), y: chainStartY/2,z:chainStartZ-2, height: chainStartY,width: 0.5, depth: 0.5  }, 
+			{ lambert: { color: 'GoldenRod' } })
+			this.third.add.box({ x:chainStartX+((nbTorus-0)*0.45), y: chainStartY,z:chainStartZ-1.25, height: 0.5,width: 0.5, depth: 2  }, 
+			{ lambert: { color: 'GoldenRod' } })
+			
+			
+		    for (let i = 2; i <= nbTorus; i++) 
+			{
+				// chain
+				let t2 = this.third.add.torus(
+					{ x: i * 0.45 + chainStartX, y: chainStartY, z: chainStartZ,tubularSegments: 16, tube: 0.05, radius: 0.25 },
+					{ standard: { emissive: 0x888888, roughness: 0.4, metalness: 1 } }
+				)
+				if (i % 2 == 0) t2.rotateX(Math.PI / 2)
+					this.third.physics.add.existing(t2, { mass: i === nbTorus ? 0 : 1 })
+				// ball
+				if (i === 2) 
+				{
+					let ball = this.third.physics.add.sphere(
+						{ mass: 2, radius: 0.5, x: + chainStartX+0.2, y: chainStartY,z: chainStartZ },
+						{ standard: { emissive: 0x222222, roughness: 0.4, metalness: 1 } }
+						)
+					this.third.physics.add.constraints.lock(t2.body, ball.body)
+				}
+			}
+		}
 
-		     const gridData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADusBZ+q87AAAAJtJREFUeJzt0EENwDAAxLDbNP6UOxh+NEYQ5dl2drFv286598GrA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAu37AD8eaBH5JQdVbAAAAAElFTkSuQmCC';
-		  //------------------
-		             this.third.load.texture(gridData).then(texture => {
+        AddGround(){
+		 const gridData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADusBZ+q87AAAAJtJREFUeJzt0EENwDAAxLDbNP6UOxh+NEYQ5dl2drFv286598GrA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAu37AD8eaBH5JQdVbAAAAAElFTkSuQmCC';
+		  
+		    this.third.load.texture(gridData).then(texture => {
             console.log(texture)
             texture.wrapS = texture.wrapT = 1000 // RepeatWrapping
             texture.repeat.set(60, 25)
@@ -85,8 +113,8 @@
             )
             ground.body.setRestitution(1)
           }) 
-			    
-			 /*
+		  
+		  	 /*
 			 
 			
                 const texture2 = this.third.load.texture(gridData);
@@ -111,27 +139,174 @@
                 ground.receiveShadow = true;
                 //Features = Object.assign({ ground }, Features);
 		  */
-		  
-		  //-----------------------
-          // enable physics debug
-          //this.physics.debug.enable()
+		}
+		AddBridge(x,y,z){
+		  // get the shape from the sve file
+          const svg = this.cache.html.get('bridge')
+          const bridgeShape = this.third.transform.fromSVGtoShape(svg)
 
-		   const x_origin = -10//25
+          // set scaling variable
+          const scale = 20//25
+		  
+          // extrude the shape to a 3d object
+          const bridge = this.third.add.extrude({
+            shape: bridgeShape[0],
+            depth: 120,
+			bevelEnabled: true,
+            bevelSize: 1,
+            bevelThickness: 1
+          })
+
+          // scale the shape
+          bridge.scale.set(1 / -scale, 1 / -scale, 1 / scale)
+
+          // add the desired shape (in this case, concave, which is always static)
+          bridge.shape = 'concave'
+			bridge.material = new THREE.MeshLambertMaterial({ color: 0xff0000, side: THREE.DoubleSide  })
+
+
+          // offset the position by the half of the shape's size
+          bridge.position.setY(bridge.geometry.boundingBox.max.y / scale+ y)
+		  bridge.position.setX(x)
+		  bridge.position.setZ(z)
+
+          // add a physics body
+          this.third.physics.add.existing(bridge)
+
+          // set some body properties
+          bridge.body.setAngularFactor(0, 0, 0)
+          bridge.body.setLinearFactor(0, 0, 0)
+		  
+		  bridge.body.setFriction(0.2)
+		}
+		AddDominos(x_origin,y_origin,z_origin){
+			// pink box
+			this.startbox1=this.third.physics.add.box({ x:5 + x_origin, y: 1,z:z_origin, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			//this.startbox1.body.applyForceX(3)
+
+			this.third.physics.add.box({ x:7	 + x_origin, y: 1,z:z_origin, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+			this.third.physics.add.box({ x:9.0 + x_origin, y: 1, z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+			this.third.physics.add.box({ x:10.5 + x_origin, y: 1, z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+			this.third.physics.add.box({ x:11.75 + x_origin, y: 3 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+			this.third.physics.add.box({ x:13 + x_origin, y: 4 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+			this.third.physics.add.box({ x:14.25 + x_origin, y: 5 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+			this.third.physics.add.box({ x:15.50 + x_origin, y: 6 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+			this.third.physics.add.box({ x:16.75 + x_origin, y: 7.2 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+			this.third.physics.add.box({ x:18.0 + x_origin, y: 7.2 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+			this.third.physics.add.box({ x:20 + x_origin, y: 7.5 , z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+			//this.third.physics.add.box({ x:20.50 + x_origin, y: 7.2, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+
+			//  this.third.physics.add.box({ x:31.50 + x_origin, y: 1,z:2 ,height: 1,width: 0.4, depth:3  }, { lambert: { color: 'hotpink' } })
+
+			//this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.startbox3=this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:z_origin - 2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.startbox3=this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:z_origin - 0.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.startbox3=this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:z_origin + 1.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.startbox3=this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:z_origin + 3.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			
+			this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:z_origin + 1.0,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:z_origin + 2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			
+			
+			this.third.physics.add.box({ x:33.5 + x_origin, y: 1,z:z_origin + 2.0, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:36.0 + x_origin, y: 1,z:z_origin + 2.0 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:38.0 + x_origin, y: 1,z:z_origin + 2.0 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			
+			this.third.physics.add.box({ x:38.0 + x_origin, y: 1,z:z_origin + 10.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:36.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:34.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:32.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:30.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:28.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:26.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:24.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			//this.third.physics.add.box({ x:22.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+
+			const box1 = this.third.add.box({ x:22.0 + x_origin, y: 1,z:z_origin + 9.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			box1.rotation.set(0, -Math.PI / 6, 0)
+			this.third.physics.add.existing(box1)
+			
+			const box2 = this.third.add.box({ x:20.5 + x_origin, y: 1,z:z_origin + 8.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			box2.rotation.set(0, -Math.PI / 3, 0)
+			this.third.physics.add.existing(box2)
+
+
+
+			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin -8 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+
+			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin -6 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+
+			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin -4 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+
+			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin -2 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+
+			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin + 0 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+
+			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin + 2 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+
+			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin + 5 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+
+			this.startbox2=this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin + 7 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+
+			//this.startbox2.body.applyForceZ(-3)
+			//this.startbox3.body.applyForceX(3)
+		}
+		AddRotator(x_origin,y_origin,z_origin){
+			let feet = this.third.add.box({ x:x_origin, y: y_origin+0.75,z:z_origin, height:1.5,width: 0.5, depth: 0.5  }, 
+				{ lambert: { color: 'GoldenRod' } })
+			let arm = this.third.add.box({ x:x_origin, y: y_origin+1.75,z:z_origin, height:0.5,width: 0.5, depth: 10  }, 
+				{ lambert: { color: 'GoldenRod' } })
+			
+			
+			this.third.physics.add.existing(feet, { mass: 100 })
+			this.third.physics.add.existing(arm, { mass: 2 })
+			//this.third.physics.add.constraints.fixed(feet.body, arm.body)
+			
+			this.third. physics.add.constraints.hinge(feet.body, arm.body, {
+				pivotA: { x: 0, y: 1.0, z: 0 },
+				axisA: { y: 1 },
+				})
+		}
+		create() {
+			console.log('create')
+
+			// set up scene (light, ground, grid, sky, orbitControls)
+			this.third.warpSpeed('-ground')
+			//this.third.warpSpeed()
+			
+			// position camera
+			this.third.camera.position.set(0, 15, 30)
+			//this.third.camera.lookAt(0, 8, 0)
+		  
+			this.AddGround()
+						
+			const x_origin = -20//25
+			 
+			this.AddBall(x_origin-2, 7,-2);
+			this.AddBridge(x_origin+20,0,-2);
+		  
+			this.AddDominos(x_origin,0,-2);
+
+			this.AddRotator(x_origin+40,0,+4);
 		   
-          // position camera
-          this.third.camera.position.set(10, 10, 20)
-
-          // blue box
-          //this.box = this.add.box({ y: 2 }, { lambert: { color: 'deepskyblue' } })
-
-          // pink box
-          this.third.physics.add.box({x: x_origin, y: 10 }, { lambert: { color: 'deepskyblue' } })
-
-		  
-		  
-		 this.third.physics.add.sphere({ x: 0.2 + x_origin, y: 3, z: 0, radius: 0.5 })
+        
+	  
+		/*	  
+			this.third.physics.add.sphere({ x: 0.2 + x_origin, y: 3, z: 0, radius: 0.5 })
 		   
-		  /*
+		  
           // green sphere
           const geometry = new this.third.SphereGeometry(0.8, 16, 16)
           const material = new this.third.MeshLambertMaterial({ color: 0x00ff00 })
@@ -143,97 +318,13 @@
 		  */
 		  
 		 
-          // get the shape from the sve file
-          const svg = this.cache.html.get('bridge')
-          const bridgeShape = this.third.transform.fromSVGtoShape(svg)
-
-          // set scaling variable
-          const scale = 20//25
-
-		 
-		  
-          // extrude the shape to a 3d object
-          const bridge = this.third.add.extrude({
-            shape: bridgeShape[0],
-            depth: 120,
-			 bevelEnabled: true,
-            bevelSize: 2,
-            bevelThickness: 5
-          })
-
-          // scale the shape
-          bridge.scale.set(1 / -scale, 1 / -scale, 1 / scale)
-
-          // add the desired shape (in this case, concave, which is always static)
-          bridge.shape = 'concave'
-
-          // offset the position by the half of the shape's size
-          bridge.position.setY(bridge.geometry.boundingBox.max.y / scale)
-		  bridge.position.setX(20+x_origin)
-
-          // add a physics body
-          this.third.physics.add.existing(bridge)
-
-          // set some body properties
-          bridge.body.setAngularFactor(0, 0, 0)
-          bridge.body.setLinearFactor(0, 0, 0)
+        
 
 		 
 		  
 		  
 		  
-		   // pink box
-          this.startbox1=this.third.physics.add.box({ x:5 + x_origin, y: 1, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  //this.startbox1.body.applyForceX(3)
-
-		  this.third.physics.add.box({ x:7	 + x_origin, y: 1, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  
-		  this.third.physics.add.box({ x:9.0 + x_origin, y: 1, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  
-		  this.third.physics.add.box({ x:10.5 + x_origin, y: 1, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  
-		  this.third.physics.add.box({ x:11.75 + x_origin, y: 3 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  
-		  this.third.physics.add.box({ x:13 + x_origin, y: 4 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  
-		  this.third.physics.add.box({ x:14.25 + x_origin, y: 5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  
-		  this.third.physics.add.box({ x:15.50 + x_origin, y: 6 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  
-		  this.third.physics.add.box({ x:16.75 + x_origin, y: 7.2 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  
-		  this.third.physics.add.box({ x:18.0 + x_origin, y: 7.2 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  
-		  this.third.physics.add.box({ x:20 + x_origin, y: 7.5 , height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  
-		  //this.third.physics.add.box({ x:20.50 + x_origin, y: 7.2, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  
-		  
-		 //  this.third.physics.add.box({ x:31.50 + x_origin, y: 1,z:2 ,height: 1,width: 0.4, depth:3  }, { lambert: { color: 'hotpink' } })
-		   
-		   //this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		   
-		   this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		   
-		  this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-		  this.third.physics.add.box({ x:34.0 + x_origin, y: 1,z:2.5, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:35.25 + x_origin, y: 1,z:2.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:36.50 + x_origin, y: 1,z:2.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			
 		
-		this.third.physics.add.box({ x:20 + x_origin, y: 1, z:-4 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-		
-		this.third.physics.add.box({ x:20 + x_origin, y: 1, z:-2 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-		
-		this.third.physics.add.box({ x:20 + x_origin, y: 1, z:0 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-
-		this.third.physics.add.box({ x:20 + x_origin, y: 1, z:2 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-		
-		this.third.physics.add.box({ x:20 + x_origin, y: 1, z:4 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-		
-		this.startbox2 = this.third.physics.add.box({ x:20 + x_origin, y: 1, z:6 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-		
-		this.startbox2.body.applyForceZ(-3)
         }
 
         update() {
@@ -253,6 +344,7 @@
           height: window.innerHeight * Math.max(1, window.devicePixelRatio / 2)
         },
         scene: [MainScene],
+		 
         ...Canvas()
       }
 	  
