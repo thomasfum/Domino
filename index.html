@@ -30,13 +30,17 @@
     </style>
 
     <script>
+	//https://github.com/enable3d/enable3d/blob/master/packages/common/src/physicsBody.ts
+	
+	
       //const { Project, Scene3D, Canvas,PhysicsLoader, THREE } = ENABLE3D
 	   const { enable3d, Scene3D, Canvas,THREE  } = ENABLE3D
 	   class MainScene extends Scene3D {
         constructor() {
           super('MainScene')
+		  
         }
-
+		
         init() {
           console.log('init')
 			this.accessThirdDimension()
@@ -49,7 +53,7 @@
 		{
           console.log('preload')
 		   // (not this.load.svg)
-		   this.load.html('bridge', '/assets/svg/bridge2.svg')
+		   this.load.html('bridge', '/assets/svg/bridge5.svg')
         }
 
 
@@ -58,9 +62,9 @@
 			const nbTorus=12
 			
 			//feet
-			this.third.add.box({ x:chainStartX+((nbTorus-0)*0.45), y: chainStartY/2,z:chainStartZ-2, height: chainStartY,width: 0.5, depth: 0.5  }, 
+			this.third.add.box({ x:chainStartX+((nbTorus-0)*0.4), y: chainStartY/2,z:chainStartZ-2, height: chainStartY,width: 0.5, depth: 0.5  }, 
 			{ lambert: { color: 'GoldenRod' } })
-			this.third.add.box({ x:chainStartX+((nbTorus-0)*0.45), y: chainStartY,z:chainStartZ-1.25, height: 0.5,width: 0.5, depth: 2  }, 
+			this.third.add.box({ x:chainStartX+((nbTorus-0)*0.4), y: chainStartY,z:chainStartZ-1.25, height: 0.5,width: 0.5, depth: 2  }, 
 			{ lambert: { color: 'GoldenRod' } })
 			
 			
@@ -68,7 +72,7 @@
 			{
 				// chain
 				let t2 = this.third.add.torus(
-					{ x: i * 0.45 + chainStartX, y: chainStartY, z: chainStartZ,tubularSegments: 16, tube: 0.05, radius: 0.25 },
+					{ x: i * 0.4 + chainStartX, y: chainStartY, z: chainStartZ,tubularSegments: 16, tube: 0.05, radius: 0.25 },
 					{ standard: { emissive: 0x888888, roughness: 0.4, metalness: 1 } }
 				)
 				if (i % 2 == 0) t2.rotateX(Math.PI / 2)
@@ -77,10 +81,16 @@
 				if (i === 2) 
 				{
 					let ball = this.third.physics.add.sphere(
-						{ mass: 2, radius: 0.5, x: + chainStartX+0.2, y: chainStartY,z: chainStartZ },
+						{ mass: 2, radius: 0.4, x: + chainStartX+0.2, y: chainStartY,z: chainStartZ },
 						{ standard: { emissive: 0x222222, roughness: 0.4, metalness: 1 } }
 						)
 					this.third.physics.add.constraints.lock(t2.body, ball.body)
+					this.starer=this.third.physics.add.box({mass:300, x: + chainStartX+2, y: 2.5,z: chainStartZ, height: 5,width:1, depth: 1  }, 
+					{ lambert: { color: 'GoldenRod' } })
+					this.cst=this.third.physics.add.constraints.lock(this.starer.body, ball.body)
+					this.starer.visible = false
+					
+					
 				}
 			}
 		}
@@ -215,11 +225,13 @@
 			this.startbox3=this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:z_origin + 1.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
 			this.startbox3=this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:z_origin + 3.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
 			
+			this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:z_origin - 0.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
 			this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:z_origin + 1.0,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
 			this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:z_origin + 2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
 			
-			
 			this.third.physics.add.box({ x:33.5 + x_origin, y: 1,z:z_origin + 2.0, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:33.5 + x_origin, y: 1,z:z_origin + 0.0, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			
 			this.third.physics.add.box({ x:36.0 + x_origin, y: 1,z:z_origin + 2.0 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
 			this.third.physics.add.box({ x:38.0 + x_origin, y: 1,z:z_origin + 2.0 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
 			
@@ -294,7 +306,7 @@
 						
 			const x_origin = -20//25
 			 
-			this.AddBall(x_origin-2, 7,-2);
+			this.AddBall(x_origin-2, 6.5,-2);
 			this.AddBridge(x_origin+20,0,-2);
 		  
 			this.AddDominos(x_origin,0,-2);
@@ -330,6 +342,38 @@
         update() {
           //this.box.rotation.x += 0.01
           //this.box.rotation.y += 0.01
+		     if (this.input.mousePointer.leftButtonDown()) {
+			//this.starer.position.x += 1
+			//this.starer.body.setVelocityX(-12)
+			 //this.starer.body.needUpdate = true
+			 console.log(this.starer.body)
+			 if(typeof this.starer == null)
+			 {
+			  console.log('click in1')
+			 }
+			 else
+			 {
+			 console.log('click in')
+			 //this.starer.body.physics.constraints.physicsWorld.removeConstraints()
+			 //this.third.physics.destroy(this.starer)
+			this.starer.body.physics.constraints.physicsWorld.removeConstraint(this.cst)
+			  this.starer.body.setCollisionFlags(6)
+          this.starer.visible = false
+          this.starer.active = false
+	
+			 //this.third.destroy(this.starer)
+			 //this.starer=null
+			 }
+			 /*
+			   this.starer.body.setCollisionFlags(6)
+          this.starer.visible = false
+          this.starer.active = false
+		    this.starer.body.visible = false
+          this.starer.body.active = false
+		  */
+			 
+			
+			}
         }
       }
 
