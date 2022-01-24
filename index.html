@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>My Enable3d Project</title>
+	
+	
+	
+	
+	    
+    <!--<script src="/js/examples.js?ver=1.1.1"></script>-->
+    <script src="/lib/phaser.min.js?ver=3.52.0"></script>
+    <script src="/lib/enable3d/enable3d.phaserExtension.0.25.0.min.js"></script>
+	
+	
+  </head>
+
+  <body>
+    <style>
+      * body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+
+    <script>
+      //const { Project, Scene3D, PhysicsLoader, THREE } = ENABLE3D
+	   const { enable3d, Scene3D, Canvas,THREE  } = ENABLE3D
+	   class MainScene extends Scene3D {
+        constructor() {
+          super('MainScene')
+        }
+
+        init() {
+          console.log('init')
+			this.accessThirdDimension()
+          //this.renderer.setPixelRatio(1)
+          //this.renderer.setSize(window.innerWidth, window.innerHeight)
+		   
+        }
+
+        preload() {
+          console.log('preload')
+		   // (not this.load.svg)
+		   this.load.html('bridge', '/assets/svg/bridge2.svg')
+        }
+
+        create() {
+          console.log('create')
+
+          // set up scene (light, ground, grid, sky, orbitControls)
+          this.third.warpSpeed('-ground')
+		  //this.third.warpSpeed()
+
+		     const gridData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADusBZ+q87AAAAJtJREFUeJzt0EENwDAAxLDbNP6UOxh+NEYQ5dl2drFv286598GrA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAu37AD8eaBH5JQdVbAAAAAElFTkSuQmCC';
+		  //------------------
+		             this.third.load.texture(gridData).then(texture => {
+            console.log(texture)
+            texture.wrapS = texture.wrapT = 1000 // RepeatWrapping
+            texture.repeat.set(60, 25)
+
+            // ground
+            const ground = this.third.physics.add.ground(
+              {
+                name: 'ground',
+                width: 60,
+                height: 25,
+                depth: 1,
+                y: -0.5
+              },
+              {
+                phong: {
+                  map: texture,
+                  transparent: true,
+                  opacity: 0.8,
+                  color: 0xffffff
+                }
+              }
+            )
+            ground.body.setRestitution(1)
+          }) 
+			    
+			 /*
+			 
+			
+                const texture2 = this.third.load.texture(gridData);
+				const texture3 = this.load.texture(gridData);
+                texture2.wrapS = texture2.wrapT = THREE.RepeatWrapping;
+                texture2.repeat(21, 21);
+			
+                // ground
+                const geometry2 = { name: 'ground', width: 41, height: 21, depth: 1, y: -0.5 };
+                const material2 = {
+                    //phong: { map: addGrid ? texture : null, color: 0xffffff }
+					phong: { map:  texture, color: 0xffffff }
+                };
+                let ground;
+                if (window.__loadPhysics) {
+                    ground = this.physics.add.ground(geometry2, material2);
+                    ground.body.setRestitution(1);
+                }
+                else {
+                    ground = this.factories.add.ground(geometry2, material2);
+                }
+                ground.receiveShadow = true;
+                //Features = Object.assign({ ground }, Features);
+		  */
+		  
+		  //-----------------------
+          // enable physics debug
+          //this.physics.debug.enable()
+
+		   const x_origin = -10//25
+		   
+          // position camera
+          this.third.camera.position.set(10, 10, 20)
+
+          // blue box
+          //this.box = this.add.box({ y: 2 }, { lambert: { color: 'deepskyblue' } })
+
+          // pink box
+          this.third.physics.add.box({x: x_origin, y: 10 }, { lambert: { color: 'deepskyblue' } })
+
+		  
+		  
+		 this.third.physics.add.sphere({ x: 0.2 + x_origin, y: 3, z: 0, radius: 0.5 })
+		   
+		  /*
+          // green sphere
+          const geometry = new this.third.SphereGeometry(0.8, 16, 16)
+          const material = new this.third.MeshLambertMaterial({ color: 0x00ff00 })
+          const cube = new this.third.Mesh(geometry, material)
+          cube.position.set(0.2, 3, 0)
+          this.scene.add(cube)
+          // add physics to an existing object
+          this.third.physics.add.existing(cube)
+		  */
+		  
+		 
+          // get the shape from the sve file
+          const svg = this.cache.html.get('bridge')
+          const bridgeShape = this.third.transform.fromSVGtoShape(svg)
+
+          // set scaling variable
+          const scale = 20//25
+
+		 
+		  
+          // extrude the shape to a 3d object
+          const bridge = this.third.add.extrude({
+            shape: bridgeShape[0],
+            depth: 120,
+			 bevelEnabled: true,
+            bevelSize: 2,
+            bevelThickness: 5
+          })
+
+          // scale the shape
+          bridge.scale.set(1 / -scale, 1 / -scale, 1 / scale)
+
+          // add the desired shape (in this case, concave, which is always static)
+          bridge.shape = 'concave'
+
+          // offset the position by the half of the shape's size
+          bridge.position.setY(bridge.geometry.boundingBox.max.y / scale)
+		  bridge.position.setX(20+x_origin)
+
+          // add a physics body
+          this.third.physics.add.existing(bridge)
+
+          // set some body properties
+          bridge.body.setAngularFactor(0, 0, 0)
+          bridge.body.setLinearFactor(0, 0, 0)
+
+		 
+		  
+		  
+		  
+		   // pink box
+          this.startbox1=this.third.physics.add.box({ x:5 + x_origin, y: 1, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  //this.startbox1.body.applyForceX(3)
+
+		  this.third.physics.add.box({ x:7	 + x_origin, y: 1, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  
+		  this.third.physics.add.box({ x:9.0 + x_origin, y: 1, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  
+		  this.third.physics.add.box({ x:10.5 + x_origin, y: 1, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  
+		  this.third.physics.add.box({ x:11.75 + x_origin, y: 3 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  
+		  this.third.physics.add.box({ x:13 + x_origin, y: 4 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  
+		  this.third.physics.add.box({ x:14.25 + x_origin, y: 5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  
+		  this.third.physics.add.box({ x:15.50 + x_origin, y: 6 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  
+		  this.third.physics.add.box({ x:16.75 + x_origin, y: 7.2 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  
+		  this.third.physics.add.box({ x:18.0 + x_origin, y: 7.2 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  
+		  this.third.physics.add.box({ x:20 + x_origin, y: 7.5 , height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  
+		  //this.third.physics.add.box({ x:20.50 + x_origin, y: 7.2, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  
+		  
+		 //  this.third.physics.add.box({ x:31.50 + x_origin, y: 1,z:2 ,height: 1,width: 0.4, depth:3  }, { lambert: { color: 'hotpink' } })
+		   
+		   //this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		   
+		   this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		   
+		  this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+		  this.third.physics.add.box({ x:34.0 + x_origin, y: 1,z:2.5, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:35.25 + x_origin, y: 1,z:2.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.third.physics.add.box({ x:36.50 + x_origin, y: 1,z:2.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			
+		
+		this.third.physics.add.box({ x:20 + x_origin, y: 1, z:-4 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+		
+		this.third.physics.add.box({ x:20 + x_origin, y: 1, z:-2 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+		
+		this.third.physics.add.box({ x:20 + x_origin, y: 1, z:0 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+
+		this.third.physics.add.box({ x:20 + x_origin, y: 1, z:2 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+		
+		this.third.physics.add.box({ x:20 + x_origin, y: 1, z:4 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+		
+		this.startbox2 = this.third.physics.add.box({ x:20 + x_origin, y: 1, z:6 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
+		
+		this.startbox2.body.applyForceZ(-3)
+        }
+
+        update() {
+          //this.box.rotation.x += 0.01
+          //this.box.rotation.y += 0.01
+        }
+      }
+
+	  
+	   const config = {
+        type: Phaser.WEBGL,
+        transparent: true,
+        scale: {
+          mode: Phaser.Scale.FIT,
+          autoCenter: Phaser.Scale.CENTER_BOTH,
+          width: window.innerWidth * Math.max(1, window.devicePixelRatio / 2),
+          height: window.innerHeight * Math.max(1, window.devicePixelRatio / 2)
+        },
+        scene: [MainScene],
+        ...Canvas()
+      }
+	  
+      // load from '/lib/ammo/kripken' or '/lib/ammo/moz'
+      // PhysicsLoader('/lib/ammo/kripken', () => new Project({ scenes: [MainScene], antialias: true }))
+	   window.addEventListener('load', () => {
+        enable3d(() => new Phaser.Game(config)).withPhysics('/lib/ammo/kripken')
+      })
+    </script>
+  </body>
+</html>
