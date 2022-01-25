@@ -101,14 +101,14 @@
 		    this.third.load.texture(gridData).then(texture => {
             console.log(texture)
             texture.wrapS = texture.wrapT = 1000 // RepeatWrapping
-            texture.repeat.set(60, 25)
+            texture.repeat.set(60, 40)
 
             // ground
             const ground = this.third.physics.add.ground(
               {
                 name: 'ground',
                 width: 60,
-                height: 25,
+                height: 40,
                 depth: 1,
                 y: -0.5
               },
@@ -191,8 +191,11 @@
 		}
 		AddDominos(x_origin,y_origin,z_origin){
 			// pink box
-			this.startbox1=this.third.physics.add.box({ x:5 + x_origin, y: 1,z:z_origin, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+			this.startbox1=this.third.physics.add.box({ x:1 + x_origin, y: 1,z:z_origin, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
 			//this.startbox1.body.applyForceX(3)
+			this.third.physics.add.box({ x:3	 + x_origin, y: 1,z:z_origin, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
+
+			this.third.physics.add.box({ x:5	 + x_origin, y: 1,z:z_origin, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
 
 			this.third.physics.add.box({ x:7	 + x_origin, y: 1,z:z_origin, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
 
@@ -292,8 +295,8 @@
 			this.third.physics.add.box({ x:13 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
 			this.third.physics.add.box({ x:11.5 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
 			this.third.physics.add.box({ x:10 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-		this.third.physics.add.box({ x:8.5 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-	this.third.physics.add.box({ x:7 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
+			this.third.physics.add.box({ x:8.5 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
+			this.third.physics.add.box({ x:7 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
 			this.third.physics.add.box({ x:5.5 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
 			this.third.physics.add.box({ x:4 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
 
@@ -333,7 +336,7 @@
 						
 			const x_origin = -20//25
 			 
-			this.AddBall(x_origin-2, 6.5,-2);
+			this.AddBall(x_origin-6, 6.5,-2);
 			this.AddBridge(x_origin+20,0,-2);
 		  
 			this.AddDominos(x_origin,0,-2);
