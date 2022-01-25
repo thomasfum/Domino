@@ -189,118 +189,96 @@
 		  
 		  bridge.body.setFriction(0.2)
 		}
-		AddDominos(x_origin,y_origin,z_origin){
-			// pink box
-			this.startbox1=this.third.physics.add.box({ x:1 + x_origin, y: 1,z:z_origin, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			//this.startbox1.body.applyForceX(3)
-			this.third.physics.add.box({ x:3	 + x_origin, y: 1,z:z_origin, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			this.third.physics.add.box({ x:5	 + x_origin, y: 1,z:z_origin, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			this.third.physics.add.box({ x:7	 + x_origin, y: 1,z:z_origin, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			this.third.physics.add.box({ x:9.0 + x_origin, y: 1, z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			this.third.physics.add.box({ x:10.5 + x_origin, y: 1, z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			this.third.physics.add.box({ x:11.75 + x_origin, y: 3 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			this.third.physics.add.box({ x:13 + x_origin, y: 4 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			this.third.physics.add.box({ x:14.25 + x_origin, y: 5 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			this.third.physics.add.box({ x:15.50 + x_origin, y: 6 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			this.third.physics.add.box({ x:16.75 + x_origin, y: 7.2 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			this.third.physics.add.box({ x:18.5 + x_origin, y: 7.2 ,z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			//this.third.physics.add.box({ x:19.5 + x_origin, y: 7.5 , z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:21.10 + x_origin, y: 7.5 , z:z_origin,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-			//this.third.physics.add.box({ x:20.50 + x_origin, y: 7.2, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-
-			//  this.third.physics.add.box({ x:31.50 + x_origin, y: 1,z:2 ,height: 1,width: 0.4, depth:3  }, { lambert: { color: 'hotpink' } })
-
-			//this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.startbox3=this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:z_origin - 2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.startbox3=this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:z_origin - 0.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.startbox3=this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:z_origin + 1.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.startbox3=this.third.physics.add.box({ x:30.0 + x_origin, y: 1 ,z:z_origin + 3.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			
-			this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:z_origin - 2.0,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:z_origin - 0.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:z_origin + 1.0,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:31.75 + x_origin, y: 1 ,z:z_origin + 2.5,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			
-			this.third.physics.add.box({ x:33.5 + x_origin, y: 1,z:z_origin + 1.8, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:33.5 + x_origin, y: 1,z:z_origin + 0.2, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:33.5 + x_origin, y: 1,z:z_origin - 1.2, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			
-			this.third.physics.add.box({ x:34.5 + x_origin, y: 1,z:z_origin + 1.6, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:34.5 + x_origin, y: 1,z:z_origin + 0.4, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:34.5 + x_origin, y: 1,z:z_origin - 0.8, height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			
-			
-			this.third.physics.add.box({ x:36.0 + x_origin, y: 1,z:z_origin - 0.2 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:36.0 + x_origin, y: 1,z:z_origin + 1.0 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			
-			this.third.physics.add.box({ x:38.0 + x_origin, y: 1,z:z_origin + 0.4 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			
-			
-			
-			this.third.physics.add.box({ x:38.0 + x_origin, y: 1,z:z_origin + 10.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:36.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:34.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:32.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:30.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:28.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:26.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			this.third.physics.add.box({ x:24.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			//this.third.physics.add.box({ x:22.0 + x_origin, y: 1,z:z_origin + 10 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-
-
-			const box1 = this.third.add.box({ x:22.0 + x_origin, y: 1,z:z_origin + 9.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			box1.rotation.set(0, -Math.PI / 6, 0)
-			this.third.physics.add.existing(box1)
-			
-			const box2 = this.third.add.box({ x:20.5 + x_origin, y: 1,z:z_origin + 8.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'hotpink' } })
-			box2.rotation.set(0, -Math.PI / 3, 0)
-			this.third.physics.add.existing(box2)
-
-
-			
-			this.startbox2=this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin + 7 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin + 5 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin + 2 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin + 0 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin -2 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-			this.third.physics.add.box({ x:20 + x_origin, y: 1, z:z_origin -4 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-
-
-			const box4 = this.third.add.box({ x:19.5 + x_origin, y: 1,z:z_origin -5.5 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'deepskyblue' } })
-			box4.rotation.set(0, Math.PI / 6, 0)
-			this.third.physics.add.existing(box4)
-
-
-			const box3 = this.third.add.box({ x:18.75 + x_origin, y: 1,z:z_origin -7 ,height: 3,width: 1, depth: 0.4  }, { lambert: { color: 'DarkOrange' } })
-			box3.rotation.set(0, Math.PI / 3, 0)
-			this.third.physics.add.existing(box3)
-
-			
-			this.third.physics.add.box({ x:17.5 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-			this.third.physics.add.box({ x:16.0 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-			this.third.physics.add.box({ x:14.5 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-			this.third.physics.add.box({ x:13 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-			this.third.physics.add.box({ x:11.5 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-			this.third.physics.add.box({ x:10 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-			this.third.physics.add.box({ x:8.5 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-			this.third.physics.add.box({ x:7 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-			this.third.physics.add.box({ x:5.5 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-			this.third.physics.add.box({ x:4 + x_origin, y: 1,z:z_origin + -7.5 ,height: 3,width: 0.4, depth: 1  }, { lambert: { color: 'DarkOrange' } })
-
 		
+		AddDomino(_x,_y,_z, _angle,_color)
+		{
+			const box1 = this.third.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { lambert: { color: _color } })
+			box1.rotation.set(0, _angle, 0)
+			this.third.physics.add.existing(box1)
+			return box1
+		}
+		AddDominos(x_origin,y_origin,z_origin){
+			
+			
+			this.startbox1=this.AddDomino(1 + x_origin, 1,z_origin,0,'hotpink')
+			//this.startbox1.body.applyForceX(3)
+			//depart
+			this.AddDomino(3 + x_origin, 1,z_origin,0,'hotpink')
+			this.AddDomino(5 + x_origin, 1,z_origin,0,'hotpink')
+			this.AddDomino(7 + x_origin, 1,z_origin,0,'hotpink')
+			this.AddDomino(9 + x_origin, 1,z_origin,0,'hotpink')
+			this.AddDomino(10.5 + x_origin, 1,z_origin,0,'hotpink')
+			//escalier
+			this.AddDomino(11.75 + x_origin, 3,z_origin,0,'hotpink')
+			this.AddDomino(13 + x_origin, 4,z_origin,0,'hotpink')
+			this.AddDomino(14.25 + x_origin, 5,z_origin,0,'hotpink')
+			this.AddDomino(15.5 + x_origin, 6,z_origin,0,'hotpink')
+			this.AddDomino(16.75 + x_origin, 7.2,z_origin,0,'hotpink')
+			this.AddDomino(18.5 + x_origin, 7.2,z_origin,0,'hotpink')
+			this.AddDomino(21.10 + x_origin, 7.5,z_origin,0,'hotpink')
+
+			//triangle rang 1
+			this.AddDomino(30.0 + x_origin, 1,z_origin - 2.5,0,'hotpink')
+			this.AddDomino(30.0 + x_origin, 1,z_origin - 0.5,0,'hotpink')
+			this.AddDomino(30.0 + x_origin, 1,z_origin + 1.5,0,'hotpink')
+			this.AddDomino(30.0 + x_origin, 1,z_origin + 3.5,0,'hotpink')
+			//triangle rang 2
+			this.AddDomino(31.75 + x_origin, 1,z_origin - 2.0,0,'hotpink')
+			this.AddDomino(31.75 + x_origin, 1,z_origin - 0.5,0,'hotpink')
+			this.AddDomino(31.75 + x_origin, 1,z_origin + 1.0,0,'hotpink')
+			this.AddDomino(31.75 + x_origin, 1,z_origin + 2.5,0,'hotpink')
+			//triangle rang 3
+			this.AddDomino(33.5 + x_origin, 1,z_origin + 1.8,0,'hotpink')
+			this.AddDomino(33.5 + x_origin, 1,z_origin + 0.2,0,'hotpink')
+			this.AddDomino(33.5 + x_origin, 1,z_origin - 1.2,0,'hotpink')
+			//triangle rang 4
+			this.AddDomino(34.5 + x_origin, 1,z_origin + 1.6,0,'hotpink')
+			this.AddDomino(34.5 + x_origin, 1,z_origin + 0.4,0,'hotpink')
+			this.AddDomino(34.5 + x_origin, 1,z_origin - 0.8,0,'hotpink')
+			//triangle rang 5
+			this.AddDomino(36.0 + x_origin, 1,z_origin - 0.2,0,'hotpink')
+			this.AddDomino(36.0 + x_origin, 1,z_origin + 1.0,0,'hotpink')
+			//triangle rang 6
+			this.AddDomino(38.0 + x_origin, 1,z_origin + 0.4,0,'hotpink')
+			
+			//ligne devant le pont
+			
+			this.AddDomino(38.0 + x_origin, 1,z_origin + 10.5,0,'hotpink')
+			this.AddDomino(36.0 + x_origin, 1,z_origin + 10,0,'hotpink')
+			this.AddDomino(34.0 + x_origin, 1,z_origin + 10,0,'hotpink')
+			this.AddDomino(32.0 + x_origin, 1,z_origin + 10,0,'hotpink')
+			this.AddDomino(30.0 + x_origin, 1,z_origin + 10,0,'hotpink')
+			this.AddDomino(28.0 + x_origin, 1,z_origin + 10,0,'hotpink')
+			this.AddDomino(26.0 + x_origin, 1,z_origin + 10,0,'hotpink')
+			this.AddDomino(24.0 + x_origin, 1,z_origin + 10,0,'hotpink')
+		
+			//courbe vers pont
+			this.AddDomino(22.0 + x_origin, 1,z_origin + 9.5 ,-Math.PI / 6,'hotpink')
+			this.AddDomino(20.5 + x_origin, 1,z_origin + 8.5 ,-Math.PI / 3,'hotpink')
+
+			//sous le pont	
+			this.startbox2=this.AddDomino(20.0 + x_origin, 1,z_origin + 7,Math.PI/2,'deepskyblue')
+			this.AddDomino(20.0 + x_origin, 1,z_origin + 5,Math.PI/2,'deepskyblue')
+			this.AddDomino(20.0 + x_origin, 1,z_origin + 2,Math.PI/2,'deepskyblue')
+			this.AddDomino(20.0 + x_origin, 1,z_origin + 0,Math.PI/2,'deepskyblue')
+			this.AddDomino(20.0 + x_origin, 1,z_origin -2,Math.PI/2,'deepskyblue')
+			this.AddDomino(20.0 + x_origin, 1,z_origin -4,Math.PI/2,'deepskyblue')
+			
+			//courbe apres le  pont
+			this.AddDomino(19.50 + x_origin, 1,z_origin -5.5,Math.PI/2+Math.PI/6.0,'deepskyblue')
+			this.AddDomino(18.75 + x_origin, 1,z_origin -7,Math.PI/2+Math.PI/3.0,'deepskyblue')
+		
+			//ligne droite derriere le pont
+			this.AddDomino(17.5 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
+			this.AddDomino(16.0 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
+			this.AddDomino(14.5 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
+			this.AddDomino(13.0 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
+			this.AddDomino(11.5 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
+			this.AddDomino(10.0 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
+			this.AddDomino(8.5 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
+			this.AddDomino(7.0 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
+			this.AddDomino(5.5 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
+			this.AddDomino(4.0 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
 			
 			this.startbox2.body.applyForceZ(-3)
 			//this.startbox3.body.applyForceX(3)
