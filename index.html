@@ -59,6 +59,7 @@
 
 		AddBall(chainStartX, chainStartY, chainStartZ){
 			
+			chainStartY=chainStartY+6.5
 			const nbTorus=12
 			
 			//feet
@@ -190,6 +191,73 @@
 		  bridge.body.setFriction(0.2)
 		}
 		
+		
+		AddBalancator(_x,_y,_z){
+			_y=_y+2.5
+			const box1 = this.third.add.box({ x: _x+1, y: _y+0,z:_z+1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'BlueViolet' } })
+			box1.rotation.set(0, -Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box1)
+			  // set some body properties
+			box1.body.setAngularFactor(0, 0, 0)
+			box1.body.setLinearFactor(0, 0, 0)
+		
+			const box2 = this.third.add.box({ x: _x+1, y: _y+0,z:_z-1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'BlueViolet' } })
+			box2.rotation.set(0, Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box2)
+			//this.third.physics.add.constraints.lock (box1.body, box2.body)
+			
+			box2.body.setAngularFactor(0, 0, 0)
+			box2.body.setLinearFactor(0, 0, 0)
+			
+			const box3 = this.third.add.box({ x: _x-1, y: _y+0,z:_z+1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'BlueViolet' } })
+			box3.rotation.set(0, -Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box3)
+			box3.body.setAngularFactor(0, 0, 0)
+			box3.body.setLinearFactor(0, 0, 0)
+		
+			const box4 = this.third.add.box({ x: _x-1, y: _y+0,z:_z-1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'BlueViolet' } })
+			box4.rotation.set(0, Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box4)
+			box4.body.setAngularFactor(0, 0, 0)
+			box4.body.setLinearFactor(0, 0, 0)
+			
+			
+			//this.third.physics.add.constraints.lock (box3.body, box4.body)
+			
+			const cyl = this.third.add.cylinder({
+              x: _x,
+              y: _y+2.4,
+              z: _z,
+              radiusTop: 0.1,
+              radiusBottom: 0.1,
+              height: 2.4
+            })
+			cyl.rotation.set( Math.PI/2,0, Math.PI/2)
+			this.third.physics.add.existing(cyl)
+			//this.third.physics.add.constraints.fixed (box1.body, cyl.body)
+			//this.third.physics.add.constraints.fixed (box3.body, cyl.body)
+			cyl.body.setAngularFactor(0, 0, 0)
+			cyl.body.setLinearFactor(0, 0, 0)
+			
+			
+			const box5 = this.third.add.box({ x: _x, y: _y+1,z:_z+0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
+			box5.rotation.set(0, -Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box5)
+		
+			const box6 = this.third.add.box({ x: _x, y: _y+1,z:_z-0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
+			box6.rotation.set(0, Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box6)
+			this.third.physics.add.constraints.lock(box5.body, box6.body)
+			
+			this.third.physics.add.constraints.lock(box5.body, cyl.body)
+			
+			this.third. physics.add.constraints.hinge(box5.body, cyl.body, {
+				pivotA: { x: 0, y: 1.5, z: 0 },
+				axisA: { z: 1 },
+				})
+			
+		
+		}
 		AddDomino(_x,_y,_z, _angle,_color)
 		{
 			const box1 = this.third.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { lambert: { color: _color } })
@@ -197,6 +265,15 @@
 			this.third.physics.add.existing(box1)
 			return box1
 		}
+		
+		AddBar(_x,_y,_z, _angle,_color, _size)
+		{
+			const box1 = this.third.add.box({ x: _x, y: _y,z:_z,height: 2,width: 0.4, depth: _size  }, { lambert: { color: _color } })
+			box1.rotation.set(0, _angle, 0)
+			this.third.physics.add.existing(box1)
+			return box1
+		}
+		
 		AddDominos(x_origin,y_origin,z_origin){
 			
 			
@@ -215,7 +292,7 @@
 			this.AddDomino(15.5 + x_origin, 6,z_origin,0,'hotpink')
 			this.AddDomino(16.75 + x_origin, 7.2,z_origin,0,'hotpink')
 			this.AddDomino(18.5 + x_origin, 7.2,z_origin,0,'hotpink')
-			this.AddDomino(21.10 + x_origin, 7.5,z_origin,0,'hotpink')
+			this.AddDomino(21.10 + x_origin, 7.5,z_origin-0.2,0,'hotpink')
 
 			//triangle rang 1
 			this.AddDomino(30.0 + x_origin, 1,z_origin - 2.5,0,'hotpink')
@@ -276,12 +353,75 @@
 			this.AddDomino(11.5 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
 			this.AddDomino(10.0 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
 			this.AddDomino(8.5 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
-			this.AddDomino(7.0 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
-			this.AddDomino(5.5 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
-			this.AddDomino(4.0 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
+			//this.AddDomino(7.0 + x_origin, 1,z_origin -7.5,0,'DarkOrange')
 			
-			this.startbox2.body.applyForceZ(-3)
-			//this.startbox3.body.applyForceX(3)
+			this.AddDomino(6 +1.5+ x_origin, 1,z_origin -7,Math.PI/6.0,'DarkOrange')
+			this.AddDomino(5 +1.5+ x_origin, 1,z_origin -6,Math.PI/3.0,'DarkOrange')
+			this.AddDomino(4 +1.5+ x_origin, 1,z_origin -5,Math.PI/2,'deepskyblue')
+			this.AddDomino(4 +1.5+ x_origin, 1,z_origin -4,Math.PI/2,'deepskyblue')
+			this.AddDomino(4 +1.5+ x_origin, 1,z_origin -3.0,Math.PI/2,'deepskyblue')
+			
+			//apres la balancoire
+			this.startbox4=this.AddDomino(4 +1.5+ x_origin, 1,z_origin +2.0,Math.PI/2,'deepskyblue')
+			this.AddDomino(4 +1.5+ x_origin, 1,z_origin +3.5,Math.PI/2,'deepskyblue')
+			this.AddDomino(4 +1.5+ x_origin, 1,z_origin +5.0,Math.PI/2,'deepskyblue')
+			
+			
+			this.AddBar(4 +1.5+ x_origin, 1,z_origin +6.0,Math.PI/2,'deepskyblue',10)
+			
+			
+			
+			let heart = [
+				[0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,0],
+				[0,1,1,1,1,1,0],
+				[0,1,1,1,1,1,0],
+				[0,0,1,1,1,0,0],
+				[0,0,0,1,0,0,0],
+				[0,0,0,0,0,0,0],
+				];
+			
+			
+			
+			for (let i = 0; i < 7; i++) 
+			{
+				let fac=1.4*i
+				for (let j = 0; j < 7; j++) 
+				{
+				
+					console.log("H("+i+","+j+")="+heart[i][j])
+					this.AddDomino(1+ (1.5*j)+x_origin, 1,fac+z_origin +7.0,Math.PI/2,'deepskyblue')
+				}
+				/*
+				this.AddDomino(1+ 0+x_origin, 1,fac+z_origin +7.0,Math.PI/2,'deepskyblue')
+				this.AddDomino(1+ 1.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,'deepskyblue')
+				this.AddDomino(1+ 3+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,'deepskyblue')
+				this.AddDomino(1+ 4.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,'deepskyblue')
+				this.AddDomino(1+ 6+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,'deepskyblue')
+				this.AddDomino(1+ 7.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,'deepskyblue')
+				this.AddDomino(1+ 9+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,'deepskyblue')
+				*/
+			}
+			/*
+			for (let i = 0; i < 6; i++) 
+			{
+				for (let j = 0; j < i; j++) 
+				{
+					let offset =-j*0.75
+					//if (j % 2 == 0)
+					//	offset -=0.5
+					
+					this.AddDomino(0 +1+ x_origin+ (i*1.5)+offset, 1,z_origin - (j*1.5)+9.5,Math.PI/2,'deepskyblue')
+					//this.AddDomino(4 +1.5+ x_origin- (i*1.5)+13.5, 1,z_origin +4.0- (j*1.5)+10,Math.PI/2,'deepskyblue')
+				}
+			}
+			*/
+			
+			
+			
+			
+			this.startbox4.body.applyForceZ(-3)
+			
 		}
 		AddRotator(x_origin,y_origin,z_origin){
 			let feet = this.third.add.box({ x:x_origin, y: y_origin+0.75,z:z_origin, height:1.5,width: 0.5, depth: 0.5  }, 
@@ -314,13 +454,14 @@
 						
 			const x_origin = -20//25
 			 
-			this.AddBall(x_origin-6, 6.5,-2);
+			this.AddBall(x_origin-6, 0,-2);
 			this.AddBridge(x_origin+20,0,-2);
 		  
 			this.AddDominos(x_origin,0,-2);
 
 			this.AddRotator(x_origin+40,0,+2);
 		   
+		   this.AddBalancator(x_origin+5.5,0,-2)
         
 	  
 		/*	  
