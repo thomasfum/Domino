@@ -54,9 +54,9 @@
 			console.log('preload')
 			// (not this.load.svg)
 			this.load.html('bridge', '/assets/svg/bridge2.svg')
-			this.third.load.preload('side', '/assets/img/flat1.png')
-			this.third.load.preload('top', '/assets/img/flat2.png')
-			this.third.load.preload('bottom', '/assets/img/flat3.png')
+			this.third.load.preload('side', '/assets/img/flat0.png')
+			this.third.load.preload('top', '/assets/img/flat0.png')
+			this.third.load.preload('bottom', '/assets/img/flat0.png')
         }
 
 		async AddCube()
@@ -68,18 +68,30 @@
 				  const backFront = leftRight.clone()
 				  backFront.needsUpdate = true
 				  const top = await this.third.load.texture('top')
+				  
+				  //top.color='GoldenRod'
+				  //top.name='top'
+				  
+				  
 				  const bottom = await this.third.load.texture('bottom')
 
-				  const textureCube = this.third.misc.textureCube([leftRight, leftRight, top, bottom, backFront, backFront])
+				  this.textureCube = this.third.misc.textureCube([leftRight, leftRight, top, bottom, backFront, backFront])
 
-				  textureCube.texture.front.repeat.set(4, 1)
-				  textureCube.texture.back.repeat.set(4, 1)
+				  this.textureCube.texture.front.repeat.set(4, 1)
+				  
+				  this.textureCube.texture.back.repeat.set(4, 1)
 
-				  textureCube.texture.left.repeat.set(1, 1)
-				  textureCube.texture.right.repeat.set(1, 1)
-
+				  this.textureCube.texture.left.repeat.set(1, 1)
+				  this.textureCube.texture.right.repeat.set(1, 1)
+				  
+				  this.textureCube.materials[0].name='ttt'
+				  this.textureCube.materials[0].color.r=0.2
+				  this.textureCube.materials[0].color.g=1
+				  this.textureCube.materials[0].color.b=0.2
+				  
+					console.log(this.textureCube)
 				  // add the texture cube's materials as a custom material
-				  this.third.add.box({ y:14,z:4, width: 4 }, { custom: textureCube.materials })
+				  this.third.add.box({ y:14,z:4, width: 4 }, { custom: this.textureCube.materials })
 		}
 
 		AddBall(chainStartX, chainStartY, chainStartZ){
@@ -125,7 +137,7 @@
 		 const gridData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADusBZ+q87AAAAJtJREFUeJzt0EENwDAAxLDbNP6UOxh+NEYQ5dl2drFv286598GrA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAu37AD8eaBH5JQdVbAAAAAElFTkSuQmCC';
 		  
 		    this.third.load.texture(gridData).then(texture => {
-            console.log(texture)
+            //console.log(texture)
             texture.wrapS = texture.wrapT = 1000 // RepeatWrapping
             texture.repeat.set(60, 40)
 
@@ -414,7 +426,7 @@
 				for (let j = 0; j < 7; j++) 
 				{
 				
-					console.log("H("+i+","+j+")="+heart[i][j])
+					//console.log("H("+i+","+j+")="+heart[i][j])
 					this.AddDomino(1+ (1.5*j)+x_origin, 1,fac+z_origin +7.0,Math.PI/2,'deepskyblue')
 				}
 				/*
