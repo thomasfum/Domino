@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>My Enable3d Project</title>
+    <title>Domino</title>
 	
 	
 	
@@ -31,8 +31,10 @@
 
     <script>
 	//https://github.com/enable3d/enable3d/blob/master/packages/common/src/physicsBody.ts
+	//https://free-3dtextureshd.com/download/wood-floor-parquet-texture-3d-bpr-free-download-seamless-4k/
 	
 	
+	//orbit control a finir
       //const { Project, Scene3D, Canvas,PhysicsLoader, THREE } = ENABLE3D
 	   const { enable3d, Scene3D, Canvas,THREE  } = ENABLE3D
 	   class MainScene extends Scene3D {
@@ -53,9 +55,14 @@
 		{
 			console.log('preload')
 			// (not this.load.svg)
-			this.load.html('bridge', '/assets/svg/bridge2.svg')
+			this.load.html('bridge', '/assets/svg/bridge6.svg')
 			this.third.load.preload('face', '/assets/img/flat0.png')
 			this.third.load.preload('side', '/assets/img/flat0.png')
+			this.third.load.preload('wood', '/assets/img/wood3.jpg')
+			this.third.load.preload('wood_normal', '/assets/img/wood3_normal.jpg')
+			this.third.load.preload('wood_roughness', '/assets/img/wood3_roughness.jpg')
+			
+			
 			//this.third.load.preload('bottom', '/assets/img/flat0.png')
         }
 
@@ -99,7 +106,7 @@
 		}
         AddGround(){
 		 const gridData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADusBZ+q87AAAAJtJREFUeJzt0EENwDAAxLDbNP6UOxh+NEYQ5dl2drFv286598GrA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAu37AD8eaBH5JQdVbAAAAAElFTkSuQmCC';
-		  
+		  /*
 		    this.third.load.texture(gridData).then(texture => {
             //console.log(texture)
             texture.wrapS = texture.wrapT = 1000 // RepeatWrapping
@@ -124,8 +131,68 @@
               }
             )
             ground.body.setRestitution(1)
-          }) 
+          })
+*/		  
 		  
+            //console.log(texture)
+            this.textureWood.wrapS = this.textureWood.wrapT = 1000 // RepeatWrapping
+            this.textureWood.repeat.set(5, 5)
+
+			this.textureWoodNormal.wrapS = this.textureWoodNormal.wrapT = 5 // RepeatWrapping
+			this.textureWoodNormal.repeat.set(5, 5)
+			
+			this.textureWoodRoughness.wrapS = this.textureWoodRoughness.wrapT = 5 // RepeatWrapping
+			this.textureWoodRoughness.repeat.set(5, 5)
+
+			/*
+			  const material = new THREE.MeshLambertMaterial({ map: this.textureWood,  transparent: true,
+                  opacity: 1,
+                  color: 0xffffff })
+  */
+  /*
+			const material = new THREE.MeshStandardMaterial({ map: this.textureWood,  transparent: false,
+					normalMap: this.textureWoodNormal,
+					roughnessMap: this.textureWoodRoughness,
+                  opacity: 1,
+                  color: 0xffffff })
+	*/
+            // ground
+            const ground = this.third.physics.add.ground(
+              {
+                name: 'ground',
+                width: 60,
+                height: 40,
+                depth: 1,
+                y: -0.5
+              },
+              {
+			  
+			  standard:{
+			      map: this.textureWood,
+				  //normalMap: this.textureWoodNormal,
+				  //roughnessMap: this.textureWoodRoughness,
+				  
+                  transparent: true,
+                  opacity: 1,
+                  color: 0xffffff
+				  
+				  }
+			  }
+			  
+			  /*
+                phong: {
+                  map: this.textureWood,
+                  transparent: true,
+                  opacity: 1,
+                  color: 0xffffff
+                }
+				*/
+              
+            )
+            ground.body.setRestitution(1)
+			//ground.material=material;
+			//console.log(ground)
+          
 		  	 /*
 			 
 			
@@ -164,19 +231,19 @@
           const bridge = this.third.add.extrude({
             shape: bridgeShape[0],
             depth: 120,
+			 //amount : 500,
 			bevelEnabled: false,
-            bevelSize: 1,
-            bevelThickness: 1
-          })
+            bevelSize: 2,
+            bevelThickness: 2
+          },{ lambert: { color: 'DarkKhaki' }} )
 
           // scale the shape
           bridge.scale.set(1 / -scale, 1 / -scale, 1 / scale)
 
           // add the desired shape (in this case, concave, which is always static)
           bridge.shape = 'concave'
-			bridge.material = new THREE.MeshLambertMaterial({ color: 0xff0000, side: THREE.DoubleSide })
-
-
+		  
+	
           // offset the position by the half of the shape's size
           bridge.position.setY(bridge.geometry.boundingBox.max.y / scale+ y)
 		  bridge.position.setX(x)
@@ -307,6 +374,7 @@
 				textureCube.materials[i].color.g=g3
 				textureCube.materials[i].color.b=b3
 			}
+			
 			//----------------------------------
 			//const box1 = this.third.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { lambert: { color: _color } })
 			const box1 = this.third.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { custom: textureCube.materials } )
@@ -337,6 +405,19 @@
 				
 			let arm = this.third.add.box({ x:x_origin, y: y_origin+1.75,z:z_origin, height:0.5,width: 0.5, depth: 14  }, 
 				{ lambert: { color: 'GoldenRod' } })
+			
+			
+			
+			const cyl = this.third.add.cylinder({
+              x: x_origin,
+              y: y_origin+2,
+              z: z_origin,
+              radiusTop: 0.15,
+              radiusBottom: 0.15,
+              height: 0.5
+            })
+			//cyl.rotation.set( Math.PI/2,0, Math.PI/2)
+			//this.third.physics.add.existing(cyl)
 			
 			
 			this.third.physics.add.existing(feetcyl, { mass: 100 })
@@ -518,17 +599,41 @@
 		async create() {
 			console.log('create')
 
-			
+			 this.third.renderer.setPixelRatio(window.devicePixelRatio)
+			 
 				//-----------------------------------
 				this.textureFace = await this.third.load.texture('face')
 				this.textureSide = await this.third.load.texture('side')
+				this.textureWood = await this.third.load.texture('wood')
+				this.textureWoodNormal = await this.third.load.texture('wood_normal')
+				this.textureWoodRoughness = await this.third.load.texture('wood_roughness')
+				
+				
 				
 				//-----------------------------
 				  
 			// set up scene (light, ground, grid, sky, orbitControls)
-			this.third.warpSpeed('-ground')
-			//this.third.warpSpeed()
+			 const { camera, ground, lights, orbitControls } = await this.third.warpSpeed('-ground')
+			  const { hemisphereLight, ambientLight, directionalLight } = lights
+			  /*
+			 console.log("lights");
+			 console.log(hemisphereLight);
+			 console.log(ambientLight);
+			 console.log(directionalLight);
+		*/
+		 console.log(this.third	);
+	
+	
+			directionalLight.shadow.camera.bottom=-25
+			directionalLight.shadow.camera.top=25
+			directionalLight.shadow.camera.left=-25
+			directionalLight.shadow.camera.right=25
+	
 			
+			//const helper = new THREE.CameraHelper( directionalLight.shadow.camera );
+			//this.third.scene.add( helper );
+
+						
 			// position camera
 			this.third.camera.position.set(0, 40, 50)
 			//this.third.camera.lookAt(0, 8, 0)
@@ -580,7 +685,7 @@
 			//this.starer.position.x += 1
 			//this.starer.body.setVelocityX(-12)
 			 //this.starer.body.needUpdate = true
-			 console.log(this.starer.body)
+			 //console.log(this.starer.body)
 			 if(typeof this.starer == null)
 			 {
 			  console.log('click in1')
@@ -623,13 +728,15 @@
         },
         scene: [MainScene],
 		 
-        ...Canvas()
+        ...Canvas({ antialias: true })
       }
 	  
       // load from '/lib/ammo/kripken' or '/lib/ammo/moz'
       // PhysicsLoader('/lib/ammo/moz', () => new Project({ scenes: [MainScene], antialias: true }))
 	   window.addEventListener('load', () => {
         enable3d(() => new Phaser.Game(config)).withPhysics('/lib/ammo/kripken')
+		console.log("Phaser")
+		console.log(Phaser)
       })
     </script>
   </body>
