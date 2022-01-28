@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Domino</title>
+	
+	
+	
+	
+	   
+    
+	<script src="/js/domino.js"></script>
+	
+    <script src="/lib/phaser.min.js?ver=3.52.0"></script>
+  <script src="/lib/enable3d/enable3d.phaserExtension.0.25.0.min.js"></script>
+	
+	  </head>
+
+  <body>
+    <style>
+      * body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+
+    <script>
+	//https://github.com/enable3d/enable3d/blob/master/packages/common/src/physicsBody.ts
+	//https://free-3dtextureshd.com/download/wood-floor-parquet-texture-3d-bpr-free-download-seamless-4k/
+	
+	
+		//orbit control a finir
+		//ajouter son
+		//serialization /deserialisation
+		
+      //const { Project, Scene3D, Canvas,PhysicsLoader, THREE } = ENABLE3D
+	   const { Project,enable3d, Scene3D, Canvas,THREE,FLAT   } = ENABLE3D
+	   class MainScene extends Scene3D {
+        constructor() {
+          super('MainScene')
+		  
+        }
+		
+        init() {
+          console.log('init')
+			this.accessThirdDimension()
+          //this.renderer.setPixelRatio(1)
+          //this.renderer.setSize(window.innerWidth, window.innerHeight)
+		   
+        }
+
+        preload() 
+		{
+			console.log('preload')
+			// (not this.load.svg)
+			this.load.html('bridge', '/assets/svg/bridge6.svg')
+			this.third.load.preload('face', '/assets/img/flat0.png')
+			this.third.load.preload('side', '/assets/img/flat0.png')
+			this.third.load.preload('wood', '/assets/img/wood3.jpg')
+			this.third.load.preload('wood_normal', '/assets/img/wood3_normal.jpg')
+			this.third.load.preload('wood_roughness', '/assets/img/wood3_roughness.jpg')
+			this.third.load.preload('textureButton', '/assets/button/button_sprite_sheet.png')
+			
+			
+			
+			//this.third.load.preload('bottom', '/assets/img/flat0.png')
+        }
+
+		AddBall(chainStartX, chainStartY, chainStartZ){
+			
+			chainStartY=chainStartY+6.5
+			const nbTorus=12
+			
+			//feet
+			this.third.add.box({ x:chainStartX+((nbTorus-0)*0.4), y: chainStartY/2,z:chainStartZ-2, height: chainStartY,width: 0.5, depth: 0.5  }, 
+			{ lambert: { color: 'GoldenRod' } })
+			this.third.add.box({ x:chainStartX+((nbTorus-0)*0.4), y: chainStartY,z:chainStartZ-1.25, height: 0.5,width: 0.5, depth: 2  }, 
+			{ lambert: { color: 'GoldenRod' } })
+			
+			
+		    for (let i = 2; i <= nbTorus; i++) 
+			{
+				// chain
+				let t2 = this.third.add.torus(
+					{ x: i * 0.4 + chainStartX, y: chainStartY, z: chainStartZ,tubularSegments: 16, tube: 0.05, radius: 0.25 },
+					{ standard: { emissive: 0x888888, roughness: 0.4, metalness: 1 } }
+				)
+				if (i % 2 == 0) t2.rotateX(Math.PI / 2)
+					this.third.physics.add.existing(t2, { mass: i === nbTorus ? 0 : 1 })
+				// ball
+				if (i === 2) 
+				{
+					let ball = this.third.physics.add.sphere(
+						{ mass: 2, radius: 0.4, x: + chainStartX+0.2, y: chainStartY,z: chainStartZ },
+						{ standard: { emissive: 0x222222, roughness: 0.4, metalness: 1 } }
+						)
+					this.third.physics.add.constraints.lock(t2.body, ball.body)
+					this.starer=this.third.physics.add.box({mass:300, x: + chainStartX+2, y: 2.5,z: chainStartZ, height: 5,width:1, depth: 1  }, 
+					{ lambert: { color: 'GoldenRod' } })
+					this.cst=this.third.physics.add.constraints.lock(this.starer.body, ball.body)
+					this.starer.visible = false
+					
+					
+				}
+			}
+		}
+        AddGround(){
+		 const gridData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADusBZ+q87AAAAJtJREFUeJzt0EENwDAAxLDbNP6UOxh+NEYQ5dl2drFv286598GrA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAu37AD8eaBH5JQdVbAAAAAElFTkSuQmCC';
+		  /*
+		    this.third.load.texture(gridData).then(texture => {
+            //console.log(texture)
+            texture.wrapS = texture.wrapT = 1000 // RepeatWrapping
+            texture.repeat.set(60, 40)
+
+            // ground
+            const ground = this.third.physics.add.ground(
+              {
+                name: 'ground',
+                width: 60,
+                height: 40,
+                depth: 1,
+                y: -0.5
+              },
+              {
+                phong: {
+                  map: texture,
+                  transparent: true,
+                  opacity: 0.8,
+                  color: 0xffffff
+                }
+              }
+            )
+            ground.body.setRestitution(1)
+          })
+*/		  
+		  
+            //console.log(texture)
+            this.textureWood.wrapS = this.textureWood.wrapT = 1000 // RepeatWrapping
+            this.textureWood.repeat.set(5, 5)
+
+			this.textureWoodNormal.wrapS = this.textureWoodNormal.wrapT = 5 // RepeatWrapping
+			this.textureWoodNormal.repeat.set(5, 5)
+			
+			this.textureWoodRoughness.wrapS = this.textureWoodRoughness.wrapT = 5 // RepeatWrapping
+			this.textureWoodRoughness.repeat.set(5, 5)
+
+			/*
+			  const material = new THREE.MeshLambertMaterial({ map: this.textureWood,  transparent: true,
+                  opacity: 1,
+                  color: 0xffffff })
+  */
+  /*
+			const material = new THREE.MeshStandardMaterial({ map: this.textureWood,  transparent: false,
+					normalMap: this.textureWoodNormal,
+					roughnessMap: this.textureWoodRoughness,
+                  opacity: 1,
+                  color: 0xffffff })
+	*/
+            // ground
+            const ground = this.third.physics.add.ground(
+              {
+                name: 'ground',
+                width: 60,
+                height: 40,
+                depth: 1,
+                y: -0.5
+              },
+              {
+			  
+			  standard:{
+			      map: this.textureWood,
+				  //normalMap: this.textureWoodNormal,
+				  //roughnessMap: this.textureWoodRoughness,
+				  
+                  transparent: true,
+                  opacity: 1,
+                  color: 0xffffff
+				  
+				  }
+			  }
+			  
+			  /*
+                phong: {
+                  map: this.textureWood,
+                  transparent: true,
+                  opacity: 1,
+                  color: 0xffffff
+                }
+				*/
+              
+            )
+            ground.body.setRestitution(1)
+			//ground.material=material;
+			//console.log(ground)
+          
+		  	 /*
+			 
+			
+                const texture2 = this.third.load.texture(gridData);
+				const texture3 = this.load.texture(gridData);
+                texture2.wrapS = texture2.wrapT = THREE.RepeatWrapping;
+                texture2.repeat(21, 21);
+			
+                // ground
+                const geometry2 = { name: 'ground', width: 41, height: 21, depth: 1, y: -0.5 };
+                const material2 = {
+                    //phong: { map: addGrid ? texture : null, color: 0xffffff }
+					phong: { map:  texture, color: 0xffffff }
+                };
+                let ground;
+                if (window.__loadPhysics) {
+                    ground = this.physics.add.ground(geometry2, material2);
+                    ground.body.setRestitution(1);
+                }
+                else {
+                    ground = this.factories.add.ground(geometry2, material2);
+                }
+                ground.receiveShadow = true;
+                //Features = Object.assign({ ground }, Features);
+		  */
+		}
+		AddBridge(x,y,z){
+		  // get the shape from the sve file
+          const svg = this.cache.html.get('bridge')
+		    console.log('svg')
+		  console.log(svg)
+          const bridgeShape = this.third.transform.fromSVGtoShape(svg)
+
+          // set scaling variable
+          const scale = 20//25
+		  
+          // extrude the shape to a 3d object
+          const bridge = this.third.add.extrude({
+            shape: bridgeShape[0],
+            depth: 120,
+			 //amount : 500,
+			bevelEnabled: false,
+            bevelSize: 2,
+            bevelThickness: 2
+          },{ lambert: { color: 'DarkKhaki' }} )
+
+          // scale the shape
+          bridge.scale.set(1 / -scale, 1 / -scale, 1 / scale)
+
+          // add the desired shape (in this case, concave, which is always static)
+          bridge.shape = 'concave'
+		  
+	
+          // offset the position by the half of the shape's size
+          bridge.position.setY(bridge.geometry.boundingBox.max.y / scale+ y)
+		  bridge.position.setX(x)
+		  bridge.position.setZ(z)
+
+          // add a physics body
+          this.third.physics.add.existing(bridge)
+
+          // set some body properties
+          bridge.body.setAngularFactor(0, 0, 0)
+          bridge.body.setLinearFactor(0, 0, 0)
+		  
+		  bridge.body.setFriction(0.2)
+		}
+		AddBalancator(_x,_y,_z){
+			_y=_y+2.5
+			const box1 = this.third.add.box({ x: _x+1, y: _y+0,z:_z+1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
+			box1.rotation.set(0, -Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box1)
+			  // set some body properties
+			box1.body.setAngularFactor(0, 0, 0)
+			box1.body.setLinearFactor(0, 0, 0)
+		
+			const box2 = this.third.add.box({ x: _x+1, y: _y+0,z:_z-1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
+			box2.rotation.set(0, Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box2)
+			//this.third.physics.add.constraints.lock (box1.body, box2.body)
+			
+			box2.body.setAngularFactor(0, 0, 0)
+			box2.body.setLinearFactor(0, 0, 0)
+			
+			const box3 = this.third.add.box({ x: _x-1, y: _y+0,z:_z+1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
+			box3.rotation.set(0, -Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box3)
+			box3.body.setAngularFactor(0, 0, 0)
+			box3.body.setLinearFactor(0, 0, 0)
+		
+			const box4 = this.third.add.box({ x: _x-1, y: _y+0,z:_z-1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
+			box4.rotation.set(0, Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box4)
+			box4.body.setAngularFactor(0, 0, 0)
+			box4.body.setLinearFactor(0, 0, 0)
+			
+			
+			//this.third.physics.add.constraints.lock (box3.body, box4.body)
+			
+			const cyl = this.third.add.cylinder({
+              x: _x,
+              y: _y+2.4,
+              z: _z,
+              radiusTop: 0.1,
+              radiusBottom: 0.1,
+              height: 2.4
+            })
+			cyl.rotation.set( Math.PI/2,0, Math.PI/2)
+			this.third.physics.add.existing(cyl)
+			//this.third.physics.add.constraints.fixed (box1.body, cyl.body)
+			//this.third.physics.add.constraints.fixed (box3.body, cyl.body)
+			cyl.body.setAngularFactor(0, 0, 0)
+			cyl.body.setLinearFactor(0, 0, 0)
+			
+			
+			const box5 = this.third.add.box({ x: _x, y: _y+1,z:_z+0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
+			box5.rotation.set(0, -Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box5)
+		
+			const box6 = this.third.add.box({ x: _x, y: _y+1,z:_z-0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
+			box6.rotation.set(0, Math.PI/2, Math.PI/8)
+			this.third.physics.add.existing(box6)
+			this.third.physics.add.constraints.lock(box5.body, box6.body)
+			
+			this.third.physics.add.constraints.lock(box5.body, cyl.body)
+			
+			this.third. physics.add.constraints.hinge(box5.body, cyl.body, {
+				pivotA: { x: 0, y: 1.5, z: 0 },
+				axisA: { z: 1 },
+				})
+			
+		
+		}
+		AddDomino(_x,_y,_z, _angle,_colorFace1,_colorFace2,_colorSide){
+		
+		
+			var textureCube = this.third.misc.textureCube([this.textureFace, this.textureFace, this.textureSide, this.textureSide, this.textureSide, this.textureSide])
+			/*
+				textureCube.texture.front.repeat.set(1, 1)
+				textureCube.texture.back.repeat.set(1, 1)
+				textureCube.texture.left.repeat.set(1, 1)
+				textureCube.texture.right.repeat.set(1, 1)
+			*/	
+			
+			if(_colorFace2==undefined)
+				_colorFace2=_colorFace1
+			if(_colorSide==undefined)
+				_colorSide=_colorFace1
+				
+			
+			var r1=((_colorFace1 >> 16) & 255)/255
+			var g1=((_colorFace1 >> 8) & 255)/255
+			var b1= (_colorFace1 & 255)/255
+			
+			var r2=((_colorFace2 >> 16) & 255)/255
+			var g2=((_colorFace2 >> 8) & 255)/255
+			var b2= (_colorFace2 & 255)/255
+			
+			var r3=((_colorSide >> 16) & 255)/255
+			var g3=((_colorSide >> 8) & 255)/255
+			var b3= (_colorSide & 255)/255
+			
+			//console.log('---'+bigint+"="+r+","+g+","+b)
+			//console.log('---'+_colorFace2)
+		
+			
+			textureCube.materials[0].name='Face1'
+			textureCube.materials[0].color.r=r1
+			textureCube.materials[0].color.g=g1
+			textureCube.materials[0].color.b=b1
+
+			textureCube.materials[1].name='Face2'
+			textureCube.materials[1].color.r=r2
+			textureCube.materials[1].color.g=g2
+			textureCube.materials[1].color.b=b2
+			
+			for (let i = 2; i < 6; i++) 
+			{
+				textureCube.materials[i].name='Side'+i
+				textureCube.materials[i].color.r=r3
+				textureCube.materials[i].color.g=g3
+				textureCube.materials[i].color.b=b3
+			}
+			
+			//----------------------------------
+			//const box1 = this.third.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { lambert: { color: _color } })
+			const box1 = this.third.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { custom: textureCube.materials } )
+			box1.rotation.set(0, _angle, 0)
+			this.third.physics.add.existing(box1)
+			return box1
+		}
+		AddBar(_x,_y,_z, _angle,_color, _size){
+			const box1 = this.third.add.box({ x: _x, y: _y,z:_z,height: 2,width: 0.4, depth: _size  }, { lambert: { color: _color } })
+			box1.rotation.set(0, _angle, 0)
+			this.third.physics.add.existing(box1)
+			return box1
+		}
+		AddRotator(x_origin,y_origin,z_origin){
+			/*
+			let feet = this.third.add.box({ x:x_origin, y: y_origin+0.75,z:z_origin, height:1.5,width: 0.5, depth: 0.5  }, 
+				{ lambert: { color: 'GoldenRod' } })
+				*/
+			let feetcyl = this.third.add.cylinder({
+              x: x_origin,
+              y: y_origin+0.75,
+              z: z_origin,
+              radiusTop: 0.5,
+              radiusBottom: 0.5,
+               height: 1.5
+			   },{ lambert: { color: 'GoldenRod' } })
+				
+				
+			let arm = this.third.add.box({ x:x_origin, y: y_origin+1.75,z:z_origin, height:0.5,width: 0.5, depth: 14  }, 
+				{ lambert: { color: 'GoldenRod' } })
+			
+			
+			
+			const cyl = this.third.add.cylinder({
+              x: x_origin,
+              y: y_origin+2,
+              z: z_origin,
+              radiusTop: 0.15,
+              radiusBottom: 0.15,
+              height: 0.5
+            })
+			//cyl.rotation.set( Math.PI/2,0, Math.PI/2)
+			//this.third.physics.add.existing(cyl)
+			
+			
+			this.third.physics.add.existing(feetcyl, { mass: 100 })
+			this.third.physics.add.existing(arm, { mass: 2 })
+			//this.third.physics.add.constraints.fixed(feet.body, arm.body)
+			
+			this.third. physics.add.constraints.hinge(feetcyl.body, arm.body, {
+				pivotA: { x: 0, y: 1.0, z: 0 },
+				axisA: { y: 1 },
+				})
+		}
+		AddDominos(x_origin,y_origin,z_origin){
+			
+			
+			var listDomino=[];
+		  
+
+			//depart
+			const Start = new Domino(this,1 + x_origin, 1,z_origin,0,0xff69b4);
+			listDomino.push(Start);
+			//Start.box.body.applyForceX(3)
+			
+			listDomino.push(new Domino(this,3 + x_origin, 1,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,5 + x_origin, 1,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,7 + x_origin, 1,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,9 + x_origin, 1,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,10.5 + x_origin, 1,z_origin,0,0xff69b4))
+			//escalier
+			listDomino.push(new Domino(this,11.75 + x_origin, 3,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,13 + x_origin, 4,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,14.25 + x_origin, 5,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,15.5 + x_origin, 6,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,16.75 + x_origin, 7.2,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,18.5 + x_origin, 7.2,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,21.10 + x_origin, 7.5,z_origin-0.2,0,0xff69b4))
+
+			//triangle rang 1
+			listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin - 2.5,0,0xff69b4))
+			listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin - 0.5,0,0xff69b4))
+			listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin + 1.5,0,0xff69b4))
+			listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin + 3.5,0,0xff69b4))
+			//triangle rang 2
+			listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin - 2.0,0,0xff69b4))
+			listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin - 0.5,0,0xff69b4))
+			listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin + 1.0,0,0xff69b4))
+			listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin + 2.5,0,0xff69b4))
+			//triangle rang 3
+			listDomino.push(new Domino(this,33.5 + x_origin, 1,z_origin + 1.8,0,0xff69b4))
+			listDomino.push(new Domino(this,33.5 + x_origin, 1,z_origin + 0.2,0,0xff69b4))
+			listDomino.push(new Domino(this,33.5 + x_origin, 1,z_origin - 1.2,0,0xff69b4))
+			//triangle rang 4
+			listDomino.push(new Domino(this,34.5 + x_origin, 1,z_origin + 1.6,0,0xff69b4))
+			listDomino.push(new Domino(this,34.5 + x_origin, 1,z_origin + 0.4,0,0xff69b4))
+			listDomino.push(new Domino(this,34.5 + x_origin, 1,z_origin - 0.8,0,0xff69b4))
+			//triangle rang 5
+			listDomino.push(new Domino(this,36.0 + x_origin, 1,z_origin - 0.2,0,0xff69b4))
+			listDomino.push(new Domino(this,36.0 + x_origin, 1,z_origin + 1.0,0,0xff69b4))
+			//triangle rang 6
+			listDomino.push(new Domino(this,38.0 + x_origin, 1,z_origin - 0.2,0,0xff69b4))
+			listDomino.push(new Domino(this,38.0 + x_origin, 1,z_origin + 1.0,0,0xff69b4))
+			
+			//ligne devant le pont
+			
+			listDomino.push(new Domino(this,38.0 + x_origin, 1,z_origin + 10.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,36.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,34.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,32.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,28.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,26.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,24.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+		
+			listDomino.push(new Domino(this,22.5 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			//courbe vers pont
+			listDomino.push(new Domino(this,21.3 + x_origin, 1,z_origin + 9.4 ,Math.PI-(Math.PI / 6),0xff69b4))
+			listDomino.push(new Domino(this,20.3 + x_origin, 1,z_origin + 8.5 ,Math.PI-(Math.PI / 3),0xff69b4))
+
+			//sous le pont	
+			const bridgeStart=new Domino(this,20.0 + x_origin, 1,z_origin + 7,Math.PI/2,0xff69b4)
+			listDomino.push(bridgeStart)
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 5.5,Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 3.5,Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 2,Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 0,Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin -2,Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin -4,Math.PI/2,0xff69b4))
+			
+			//courbe apres le  pont
+			listDomino.push(new Domino(this,19.50 + x_origin, 1,z_origin -5.5,Math.PI/2+Math.PI/6.0,0xff69b4))
+			listDomino.push(new Domino(this,18.75 + x_origin, 1,z_origin -7,Math.PI/2+Math.PI/3.0,0xff69b4))
+		
+			//ligne droite derriere le pont
+			listDomino.push(new Domino(this,17.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,16.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,14.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,13.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,11.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,10.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,8.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			//listDomino.push(new Domino(this,7.0 + x_origin, 1,z_origin -7.5,0,0xff69b4))
+			
+			//rotation avant balancator
+			listDomino.push(new Domino(this,5.8 +1.5+ x_origin, 1,z_origin -7,Math.PI+Math.PI/6.0,0xff69b4))
+			listDomino.push(new Domino(this,4.7 +1.5+ x_origin, 1,z_origin -6.2,Math.PI+Math.PI/3.0,0xff69b4))
+			
+			//ligne droite avant balancator
+			listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin -5,-Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin -4,-Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin -3.0,-Math.PI/2,0xff69b4))
+			
+			//apres la balancoire
+			const StartPicture=new Domino(this,4 +1.5+ x_origin, 1,z_origin +2.0,-Math.PI/2,0xff69b4)
+			listDomino.push(StartPicture)
+			listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin +3.5,-Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin +5.0,-Math.PI/2,0xff69b4))
+						
+			this.AddBar(4 +1.7+ x_origin, 1,z_origin +6.0,-Math.PI/2,0xff69b4,9)
+			
+			
+			/*
+			let heart = [
+				[0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,0],
+				[0,1,1,1,1,1,0],
+				[0,1,1,1,1,1,0],
+				[0,0,1,1,1,0,0],
+				[0,0,0,1,0,0,0],
+				[0,0,0,0,0,0,0],
+				];
+			*/
+			let heart = [
+				[0,0,0,0,0,0,0,0,0],
+				[0,0,1,1,0,1,1,0,0],
+				[0,1,1,1,1,1,1,1,0],
+				[0,1,1,1,1,1,1,1,0],
+				[0,0,1,1,1,1,1,0,0],
+				[0,0,0,1,1,1,0,0,0],
+				[0,0,0,0,0,0,0,0,0],
+				];
+			
+			for (let i = 0; i < 7; i++) 
+			{
+				let fac=1.4*i
+				for (let j = 0; j < 9; j++) 
+				{
+				
+					//console.log("H("+i+","+j+")="+heart[i][j])
+					var c=0x5f5f5f
+					if(heart[i][j]==1)
+						c=0xdc143c//0xff69b4
+					//listDomino.push(new Domino(this,1.1+ (1.1*j)+x_origin, 1,fac+z_origin +7.0,-Math.PI/2,0xff69b4,c)
+					listDomino.push(new Domino(this,1.1+ (1.1*j)+x_origin, 1,fac+z_origin +7.0,-Math.PI/2,0xdc143c,c))
+				}
+				/*
+				listDomino.push(new Domino(this,1+ 0+x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 1.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 3+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 4.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 6+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 7.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 9+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				*/
+			}
+			/*
+			for (let i = 0; i < 6; i++) 
+			{
+				for (let j = 0; j < i; j++) 
+				{
+					let offset =-j*0.75
+					//if (j % 2 == 0)
+					//	offset -=0.5
+					
+					listDomino.push(new Domino(this,0 +1+ x_origin+ (i*1.5)+offset, 1,z_origin - (j*1.5)+9.5,Math.PI/2,0xff69b4))
+					//listDomino.push(new Domino(this,4 +1.5+ x_origin- (i*1.5)+13.5, 1,z_origin +4.0- (j*1.5)+10,Math.PI/2,0xff69b4))
+				}
+			}
+			*/
+			
+			
+			
+			
+			//this.startbox4.body.applyForceZ(-3)
+			console.log(listDomino);
+			
+		}
+		
+		async create() {
+			console.log('create')
+
+			 this.third.renderer.setPixelRatio(window.devicePixelRatio)
+			 
+				//-----------------------------------
+				this.textureFace = await this.third.load.texture('face')
+				this.textureSide = await this.third.load.texture('side')
+				this.textureWood = await this.third.load.texture('wood')
+				this.textureWoodNormal = await this.third.load.texture('wood_normal')
+				this.textureWoodRoughness = await this.third.load.texture('wood_roughness')
+				this.textureButton=await this.third.load.texture('textureButton')
+				
+				
+				
+				
+				//-----------------------------
+				  
+			// set up scene (light, ground, grid, sky, orbitControls)
+			 const { camera, ground, lights, orbitControls } = await this.third.warpSpeed('-ground')
+			  const { hemisphereLight, ambientLight, directionalLight } = lights
+			  /*
+			 console.log("lights");
+			 console.log(hemisphereLight);
+			 console.log(ambientLight);
+			 console.log(directionalLight);
+		*/
+			console.log(this.third	);
+	
+	
+			directionalLight.shadow.camera.bottom=-25
+			directionalLight.shadow.camera.top=25
+			directionalLight.shadow.camera.left=-25
+			directionalLight.shadow.camera.right=25
+	
+			
+			//const helper = new THREE.CameraHelper( directionalLight.shadow.camera );
+			//this.third.scene.add( helper );
+
+						
+			// position camera
+			this.third.camera.position.set(0, 40, 50)
+			//this.third.camera.lookAt(0, 8, 0)
+		  
+			this.AddGround()
+						
+			const x_origin = -20//25
+			 
+			this.AddBall(x_origin-6, 0,-2);
+			this.AddBridge(x_origin+20,0,-2);
+		  
+			this.AddDominos(x_origin,0,-2);
+
+			this.AddRotator(x_origin+40,0,+2);
+		   
+			this.AddBalancator(x_origin+5.5,0,-2)
+			
+			  // Initialize the flat elements
+          this.ui = FLAT.init(this.third.renderer)
+		  
+		     FLAT.initEvents({ canvas: this.third.renderer.domElement, orbitControls })
+			 //		 this.third.deconstructor.add(FLAT , orbitControls)
+			 
+			
+          const width = window.innerWidth
+          const height = window.innerHeight
+		     const button = new FLAT.Button(this.textureButton, { width: 193, height: 71 }, 2, 1, 0)
+		
+		        button.setInteractive()
+          button.setPosition(width / 2, height / 2)
+          button.setDepth(1)
+          button.setScale(1)
+		         button.onInputOut = () => {
+            console.log('Button: onInputOut')
+          }
+          button.onInputDown = () => {
+            console.log('Button: onInputDown')
+          }
+          button.onInputOver = () => {
+            console.log('Button: onInputOver')
+          }
+			   this.ui.scene.add(button)
+			//this.AddCube()
+        
+	  
+		/*	  
+			this.third.physics.add.sphere({ x: 0.2 + x_origin, y: 3, z: 0, radius: 0.5 })
+		   
+		  
+          // green sphere
+          const geometry = new this.third.SphereGeometry(0.8, 16, 16)
+          const material = new this.third.MeshLambertMaterial({ color: 0x00ff00 })
+          const cube = new this.third.Mesh(geometry, material)
+          cube.position.set(0.2, 3, 0)
+          this.scene.add(cube)
+          // add physics to an existing object
+          this.third.physics.add.existing(cube)
+		  */
+		  
+		 
+        
+
+		 
+		  
+		  
+		  
+		
+        }
+		preRender() {
+          FLAT.preRender(this.renderer)
+        }
+
+        postRender() {
+          FLAT.postRender(this.renderer, this.ui)
+        }
+        update() {
+          //this.box.rotation.x += 0.01
+          //this.box.rotation.y += 0.01
+		     if (this.input.mousePointer.leftButtonDown()) {
+			//this.starer.position.x += 1
+			//this.starer.body.setVelocityX(-12)
+			 //this.starer.body.needUpdate = true
+			 //console.log(this.starer.body)
+			 if(typeof this.starer == null)
+			 {
+			  console.log('click in1')
+			 }
+			 else
+			 {
+			 console.log('click in')
+			 //this.starer.body.physics.constraints.physicsWorld.removeConstraints()
+			 //this.third.physics.destroy(this.starer)
+			this.starer.body.physics.constraints.physicsWorld.removeConstraint(this.cst)
+			  this.starer.body.setCollisionFlags(6)
+          this.starer.visible = false
+          this.starer.active = false
+	
+			 //this.third.destroy(this.starer)
+			 //this.starer=null
+			 }
+			 /*
+			   this.starer.body.setCollisionFlags(6)
+          this.starer.visible = false
+          this.starer.active = false
+		    this.starer.body.visible = false
+          this.starer.body.active = false
+		  */
+			 
+			
+			}
+        }
+      }
+
+	  
+	   const config = {
+        type: Phaser.WEBGL,
+        transparent: true,
+        scale: {
+          mode: Phaser.Scale.FIT,
+          autoCenter: Phaser.Scale.CENTER_BOTH,
+          width: window.innerWidth * Math.max(1, window.devicePixelRatio / 2),
+          height: window.innerHeight * Math.max(1, window.devicePixelRatio / 2)
+        },
+        scene: [MainScene],
+		 
+        ...Canvas({ antialias: true })
+      }
+	  
+      // load from '/lib/ammo/kripken' or '/lib/ammo/moz'
+      // PhysicsLoader('/lib/ammo/moz', () => new Project({ scenes: [MainScene], antialias: true }))
+	   window.addEventListener('load', () => {
+        enable3d(() => new Phaser.Game(config)).withPhysics('/lib/ammo/kripken')
+		console.log("Phaser")
+		console.log(Phaser)
+      })
+    </script>
+  </body>
+</html>

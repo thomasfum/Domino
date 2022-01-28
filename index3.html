@@ -7,7 +7,9 @@
       content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Domino</title>
+    <title>Button (spritesheet)</title>
+    <!--<link rel="stylesheet" href="/css/examples.css?ver=1.0.0" />-->
+  <!--  <script src="/js/examples.js?ver=1.1.1"></script>-->
 	<script src="/js/domino.js"></script>
     <script src="/lib/enable3d/enable3d.framework.0.25.0.min.js"></script>
 	
@@ -184,16 +186,16 @@
 		AddBridge(x,y,z){
 		  // get the shape from the sve file
           //const svg = this.cache.html.get('bridge')
-		  
-		  
-		  //const svg = this.load.file('bridge')
-		  //console.log('svg')
-		  //console.log(this.bridgeSVG)
+		  console.log('load')
+		  console.log(this.load)
+		  const svg = this.load.file('bridge')
+		  console.log('svg')
+		  console.log(this.bridgeSVG)
 		  
 		  
           const bridgeShape = this.transform.fromSVGtoShape(this.bridgeSVG)
-			//console.log('bridgeShape')
-		  //console.log(bridgeShape)
+		console.log('bridgeShape')
+		  console.log(bridgeShape)
 		  
           // set scaling variable
           const scale = 20//25
@@ -403,115 +405,107 @@
 		AddDominos(x_origin,y_origin,z_origin){
 			
 			
-			this.listDomino=[];
+			var listDomino=[];
 		  
 
 			//depart
 			const Start = new Domino(this,1 + x_origin, 1,z_origin,0,0xff69b4);
-			
-			var serialize = Start.toJson();
-			//console.log('serialize');
-			//console.log(serialize);
-			//var _p1 = Domino.fromJson(this, serialize);
-			
-			
-			
-			this.listDomino.push(Start);
+			listDomino.push(Start);
 			//Start.box.body.applyForceX(3)
 			
-			this.listDomino.push(new Domino(this,3 + x_origin, 1,z_origin,0,0xff69b4))
-			this.listDomino.push(new Domino(this,5 + x_origin, 1,z_origin,0,0xff69b4))
-			this.listDomino.push(new Domino(this,7 + x_origin, 1,z_origin,0,0xff69b4))
-			this.listDomino.push(new Domino(this,9 + x_origin, 1,z_origin,0,0xff69b4))
-			this.listDomino.push(new Domino(this,10.5 + x_origin, 1,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,3 + x_origin, 1,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,5 + x_origin, 1,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,7 + x_origin, 1,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,9 + x_origin, 1,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,10.5 + x_origin, 1,z_origin,0,0xff69b4))
 			//escalier
-			this.listDomino.push(new Domino(this,11.75 + x_origin, 3,z_origin,0,0xff69b4))
-			this.listDomino.push(new Domino(this,13 + x_origin, 4,z_origin,0,0xff69b4))
-			this.listDomino.push(new Domino(this,14.25 + x_origin, 5,z_origin,0,0xff69b4))
-			this.listDomino.push(new Domino(this,15.5 + x_origin, 6,z_origin,0,0xff69b4))
-			this.listDomino.push(new Domino(this,16.75 + x_origin, 7.2,z_origin,0,0xff69b4))
-			this.listDomino.push(new Domino(this,18.5 + x_origin, 7.2,z_origin,0,0xff69b4))
-			this.listDomino.push(new Domino(this,21.10 + x_origin, 7.5,z_origin-0.2,0,0xff69b4))
+			listDomino.push(new Domino(this,11.75 + x_origin, 3,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,13 + x_origin, 4,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,14.25 + x_origin, 5,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,15.5 + x_origin, 6,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,16.75 + x_origin, 7.2,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,18.5 + x_origin, 7.2,z_origin,0,0xff69b4))
+			listDomino.push(new Domino(this,21.10 + x_origin, 7.5,z_origin-0.2,0,0xff69b4))
 
 			//triangle rang 1
-			this.listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin - 2.5,0,0xff69b4))
-			this.listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin - 0.5,0,0xff69b4))
-			this.listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin + 1.5,0,0xff69b4))
-			this.listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin + 3.5,0,0xff69b4))
+			listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin - 2.5,0,0xff69b4))
+			listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin - 0.5,0,0xff69b4))
+			listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin + 1.5,0,0xff69b4))
+			listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin + 3.5,0,0xff69b4))
 			//triangle rang 2
-			this.listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin - 2.0,0,0xff69b4))
-			this.listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin - 0.5,0,0xff69b4))
-			this.listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin + 1.0,0,0xff69b4))
-			this.listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin + 2.5,0,0xff69b4))
+			listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin - 2.0,0,0xff69b4))
+			listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin - 0.5,0,0xff69b4))
+			listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin + 1.0,0,0xff69b4))
+			listDomino.push(new Domino(this,31.75 + x_origin, 1,z_origin + 2.5,0,0xff69b4))
 			//triangle rang 3
-			this.listDomino.push(new Domino(this,33.5 + x_origin, 1,z_origin + 1.8,0,0xff69b4))
-			this.listDomino.push(new Domino(this,33.5 + x_origin, 1,z_origin + 0.2,0,0xff69b4))
-			this.listDomino.push(new Domino(this,33.5 + x_origin, 1,z_origin - 1.2,0,0xff69b4))
+			listDomino.push(new Domino(this,33.5 + x_origin, 1,z_origin + 1.8,0,0xff69b4))
+			listDomino.push(new Domino(this,33.5 + x_origin, 1,z_origin + 0.2,0,0xff69b4))
+			listDomino.push(new Domino(this,33.5 + x_origin, 1,z_origin - 1.2,0,0xff69b4))
 			//triangle rang 4
-			this.listDomino.push(new Domino(this,34.5 + x_origin, 1,z_origin + 1.6,0,0xff69b4))
-			this.listDomino.push(new Domino(this,34.5 + x_origin, 1,z_origin + 0.4,0,0xff69b4))
-			this.listDomino.push(new Domino(this,34.5 + x_origin, 1,z_origin - 0.8,0,0xff69b4))
+			listDomino.push(new Domino(this,34.5 + x_origin, 1,z_origin + 1.6,0,0xff69b4))
+			listDomino.push(new Domino(this,34.5 + x_origin, 1,z_origin + 0.4,0,0xff69b4))
+			listDomino.push(new Domino(this,34.5 + x_origin, 1,z_origin - 0.8,0,0xff69b4))
 			//triangle rang 5
-			this.listDomino.push(new Domino(this,36.0 + x_origin, 1,z_origin - 0.2,0,0xff69b4))
-			this.listDomino.push(new Domino(this,36.0 + x_origin, 1,z_origin + 1.0,0,0xff69b4))
+			listDomino.push(new Domino(this,36.0 + x_origin, 1,z_origin - 0.2,0,0xff69b4))
+			listDomino.push(new Domino(this,36.0 + x_origin, 1,z_origin + 1.0,0,0xff69b4))
 			//triangle rang 6
-			this.listDomino.push(new Domino(this,38.0 + x_origin, 1,z_origin - 0.2,0,0xff69b4))
-			this.listDomino.push(new Domino(this,38.0 + x_origin, 1,z_origin + 1.0,0,0xff69b4))
+			listDomino.push(new Domino(this,38.0 + x_origin, 1,z_origin - 0.2,0,0xff69b4))
+			listDomino.push(new Domino(this,38.0 + x_origin, 1,z_origin + 1.0,0,0xff69b4))
 			
 			//ligne devant le pont
 			
-			this.listDomino.push(new Domino(this,38.0 + x_origin, 1,z_origin + 10.5,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,36.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,34.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,32.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,28.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,26.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,24.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,38.0 + x_origin, 1,z_origin + 10.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,36.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,34.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,32.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,30.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,28.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,26.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,24.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
 		
-			this.listDomino.push(new Domino(this,22.5 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,22.5 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4))
 			//courbe vers pont
-			this.listDomino.push(new Domino(this,21.3 + x_origin, 1,z_origin + 9.4 ,Math.PI-(Math.PI / 6),0xff69b4))
-			this.listDomino.push(new Domino(this,20.3 + x_origin, 1,z_origin + 8.5 ,Math.PI-(Math.PI / 3),0xff69b4))
+			listDomino.push(new Domino(this,21.3 + x_origin, 1,z_origin + 9.4 ,Math.PI-(Math.PI / 6),0xff69b4))
+			listDomino.push(new Domino(this,20.3 + x_origin, 1,z_origin + 8.5 ,Math.PI-(Math.PI / 3),0xff69b4))
 
 			//sous le pont	
 			const bridgeStart=new Domino(this,20.0 + x_origin, 1,z_origin + 7,Math.PI/2,0xff69b4)
-			this.listDomino.push(bridgeStart)
-			this.listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 5.5,Math.PI/2,0xff69b4))
-			this.listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 3.5,Math.PI/2,0xff69b4))
-			this.listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 2,Math.PI/2,0xff69b4))
-			this.listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 0,Math.PI/2,0xff69b4))
-			this.listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin -2,Math.PI/2,0xff69b4))
-			this.listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin -4,Math.PI/2,0xff69b4))
+			listDomino.push(bridgeStart)
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 5.5,Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 3.5,Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 2,Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin + 0,Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin -2,Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,20.0 + x_origin, 1,z_origin -4,Math.PI/2,0xff69b4))
 			
 			//courbe apres le  pont
-			this.listDomino.push(new Domino(this,19.50 + x_origin, 1,z_origin -5.5,Math.PI/2+Math.PI/6.0,0xff69b4))
-			this.listDomino.push(new Domino(this,18.75 + x_origin, 1,z_origin -7,Math.PI/2+Math.PI/3.0,0xff69b4))
+			listDomino.push(new Domino(this,19.50 + x_origin, 1,z_origin -5.5,Math.PI/2+Math.PI/6.0,0xff69b4))
+			listDomino.push(new Domino(this,18.75 + x_origin, 1,z_origin -7,Math.PI/2+Math.PI/3.0,0xff69b4))
 		
 			//ligne droite derriere le pont
-			this.listDomino.push(new Domino(this,17.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,16.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,14.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,13.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,11.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,10.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
-			this.listDomino.push(new Domino(this,8.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
-			//this.listDomino.push(new Domino(this,7.0 + x_origin, 1,z_origin -7.5,0,0xff69b4))
+			listDomino.push(new Domino(this,17.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,16.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,14.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,13.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,11.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,10.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			listDomino.push(new Domino(this,8.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4))
+			//listDomino.push(new Domino(this,7.0 + x_origin, 1,z_origin -7.5,0,0xff69b4))
 			
 			//rotation avant balancator
-			this.listDomino.push(new Domino(this,5.8 +1.5+ x_origin, 1,z_origin -7,Math.PI+Math.PI/6.0,0xff69b4))
-			this.listDomino.push(new Domino(this,4.7 +1.5+ x_origin, 1,z_origin -6.2,Math.PI+Math.PI/3.0,0xff69b4))
+			listDomino.push(new Domino(this,5.8 +1.5+ x_origin, 1,z_origin -7,Math.PI+Math.PI/6.0,0xff69b4))
+			listDomino.push(new Domino(this,4.7 +1.5+ x_origin, 1,z_origin -6.2,Math.PI+Math.PI/3.0,0xff69b4))
 			
 			//ligne droite avant balancator
-			this.listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin -5,-Math.PI/2,0xff69b4))
-			this.listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin -4,-Math.PI/2,0xff69b4))
-			this.listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin -3.0,-Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin -5,-Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin -4,-Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin -3.0,-Math.PI/2,0xff69b4))
 			
 			//apres la balancoire
 			const StartPicture=new Domino(this,4 +1.5+ x_origin, 1,z_origin +2.0,-Math.PI/2,0xff69b4)
-			this.listDomino.push(StartPicture)
-			this.listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin +3.5,-Math.PI/2,0xff69b4))
-			this.listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin +5.0,-Math.PI/2,0xff69b4))
+			listDomino.push(StartPicture)
+			listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin +3.5,-Math.PI/2,0xff69b4))
+			listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin +5.0,-Math.PI/2,0xff69b4))
 						
 			this.AddBar(4 +1.7+ x_origin, 1,z_origin +6.0,-Math.PI/2,0xff69b4,9)
 			
@@ -547,17 +541,17 @@
 					var c=0x5f5f5f
 					if(heart[i][j]==1)
 						c=0xdc143c//0xff69b4
-					//this.listDomino.push(new Domino(this,1.1+ (1.1*j)+x_origin, 1,fac+z_origin +7.0,-Math.PI/2,0xff69b4,c)
-					this.listDomino.push(new Domino(this,1.1+ (1.1*j)+x_origin, 1,fac+z_origin +7.0,-Math.PI/2,0xdc143c,c))
+					//listDomino.push(new Domino(this,1.1+ (1.1*j)+x_origin, 1,fac+z_origin +7.0,-Math.PI/2,0xff69b4,c)
+					listDomino.push(new Domino(this,1.1+ (1.1*j)+x_origin, 1,fac+z_origin +7.0,-Math.PI/2,0xdc143c,c))
 				}
 				/*
-				this.listDomino.push(new Domino(this,1+ 0+x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
-				this.listDomino.push(new Domino(this,1+ 1.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
-				this.listDomino.push(new Domino(this,1+ 3+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
-				this.listDomino.push(new Domino(this,1+ 4.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
-				this.listDomino.push(new Domino(this,1+ 6+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
-				this.listDomino.push(new Domino(this,1+ 7.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
-				this.listDomino.push(new Domino(this,1+ 9+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 0+x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 1.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 3+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 4.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 6+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 7.5+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
+				listDomino.push(new Domino(this,1+ 9+ x_origin, 1,fac+z_origin +7.0,Math.PI/2,0xff69b4))
 				*/
 			}
 			/*
@@ -569,8 +563,8 @@
 					//if (j % 2 == 0)
 					//	offset -=0.5
 					
-					this.listDomino.push(new Domino(this,0 +1+ x_origin+ (i*1.5)+offset, 1,z_origin - (j*1.5)+9.5,Math.PI/2,0xff69b4))
-					//this.listDomino.push(new Domino(this,4 +1.5+ x_origin- (i*1.5)+13.5, 1,z_origin +4.0- (j*1.5)+10,Math.PI/2,0xff69b4))
+					listDomino.push(new Domino(this,0 +1+ x_origin+ (i*1.5)+offset, 1,z_origin - (j*1.5)+9.5,Math.PI/2,0xff69b4))
+					//listDomino.push(new Domino(this,4 +1.5+ x_origin- (i*1.5)+13.5, 1,z_origin +4.0- (j*1.5)+10,Math.PI/2,0xff69b4))
 				}
 			}
 			*/
@@ -579,7 +573,7 @@
 			
 			
 			//this.startbox4.body.applyForceZ(-3)
-			console.log(this.listDomino);
+			console.log(listDomino);
 			
 		}
 		
@@ -626,9 +620,6 @@
           // or simply add FLAT to the deconstructor
           this.deconstructor.add(FLAT /* same effect as FLAT.destroy */, orbitControls)
 
-
-			this.listDominoBackup=[];
-
           // add button
           const texture = await this.load.texture('button')
           texture.name = 'button'
@@ -636,10 +627,9 @@
           const width = window.innerWidth
           const height = window.innerHeight
 
-
           const button = new FLAT.Button(texture, { width: 193, height: 71 }, 2, 1, 0)
           button.setInteractive()
-          button.setPosition(width / 10, height *7/ 8)
+          button.setPosition(width / 2, height / 2)
           button.setDepth(1)
           button.setScale(1)
 
@@ -648,14 +638,6 @@
           }
           button.onInputDown = () => {
             console.log('Button: onInputDown')
-			
-			//
-			
-			for (const dom of this.listDomino) {
-				this.listDominoBackup.push(dom.toJson())
-			}
-			console.log(this.listDominoBackup);
-			
 			//this.starer.position.x += 1
 					//this.starer.body.setVelocityX(-12)
 					 //this.starer.body.needUpdate = true
@@ -690,55 +672,15 @@
           this.ui.scene.add(button)
 		  
 		  
-		  const button2 = new FLAT.Button(texture, { width: 193, height: 71 }, 2, 1, 0)
-          button2.setInteractive()
-          button2.setPosition(width / 10, height *6/ 8)
-          button2.setDepth(1)
-          button2.setScale(1)
-
-          button2.onInputOut = () => {
-            console.log('Button: onInputOut')
-          }
-          button2.onInputDown = () => {
-            console.log('Button: onInputDown')
-			
-			//
-			console.log('---------------destroy');
-			for (const dom of this.listDomino) {
-				console.log(dom.box)
-				this.destroy(dom.box);
-			}
-			console.log('---------------destroy Done');
-			
-			while(this.listDomino.length > 0) {
-				this.listDomino.pop();
-			}
-			
-			console.log(this.listDomino);
-			console.log(this.listDominoBackup);
-			for (const serialize of this.listDominoBackup) {
-			
-				this.listDomino.push(Domino.fromJson(this, serialize))
-			}
-			console.log(this.listDomino);
-			
-          }
-          button2.onInputOver = () => {
-            console.log('Button: onInputOver')
-          }
-          this.ui.scene.add(button2)
-		  
-		  
-		  
-			const x_origin = -20//25
+		  const x_origin = -20//25
 			this.AddGround()
 			this.AddBall(x_origin-6, 0,-2);
 			this.AddBridge(x_origin+20,0,-2);
-
+		  
 			this.AddDominos(x_origin,0,-2);
 
 			this.AddRotator(x_origin+40,0,+2);
-
+		   
 			this.AddBalancator(x_origin+5.5,0,-2)
 			
         }
