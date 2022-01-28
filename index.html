@@ -15,57 +15,20 @@
 
   <body>
     <script>
-      const { Project, Scene3D, THREE, FLAT,PhysicsLoader } = ENABLE3D
+		const { Project, Scene3D, THREE, FLAT,PhysicsLoader } = ENABLE3D
 
-      class MainScene extends Scene3D {
-        async preload() {
-		this.load.preload('bridge', '/assets/svg/bridge6.svg')
-          await this.load.preload('button', '/assets/button/button_sprite_sheet.png')
-		  await 	this.load.preload('face', '/assets/img/flat0.png')
+		class MainScene extends Scene3D {
+			async preload() {
+			await this.load.preload('bridge', '/assets/svg/bridge6.svg')
+			await this.load.preload('button', '/assets/button/button_sprite_sheet.png')
+			await this.load.preload('face', '/assets/img/flat0.png')
 			await this.load.preload('side', '/assets/img/flat0.png')
 			await this.load.preload('wood', '/assets/img/wood3.jpg')
-			await this.load.preload('wood_normal', '/assets/img/wood3_normal.jpg')
-			await this.load.preload('wood_roughness', '/assets/img/wood3_roughness.jpg')
+			//await this.load.preload('wood_normal', '/assets/img/wood3_normal.jpg')
+			//await this.load.preload('wood_roughness', '/assets/img/wood3_roughness.jpg')
 			
         }
-		 		AddBall(chainStartX, chainStartY, chainStartZ){
-			
-			chainStartY=chainStartY+6.5
-			const nbTorus=12
-			
-			//feet
-			this.add.box({ x:chainStartX+((nbTorus-0)*0.4), y: chainStartY/2,z:chainStartZ-2, height: chainStartY,width: 0.5, depth: 0.5  }, 
-			{ lambert: { color: 'GoldenRod' } })
-			this.add.box({ x:chainStartX+((nbTorus-0)*0.4), y: chainStartY,z:chainStartZ-1.25, height: 0.5,width: 0.5, depth: 2  }, 
-			{ lambert: { color: 'GoldenRod' } })
-			
-			
-		    for (let i = 2; i <= nbTorus; i++) 
-			{
-				// chain
-				let t2 = this.add.torus(
-					{ x: i * 0.4 + chainStartX, y: chainStartY, z: chainStartZ,tubularSegments: 16, tube: 0.05, radius: 0.25 },
-					{ standard: { emissive: 0x888888, roughness: 0.4, metalness: 1 } }
-				)
-				if (i % 2 == 0) t2.rotateX(Math.PI / 2)
-					this.physics.add.existing(t2, { mass: i === nbTorus ? 0 : 1 })
-				// ball
-				if (i === 2) 
-				{
-					let ball = this.physics.add.sphere(
-						{ mass: 2, radius: 0.4, x: + chainStartX+0.2, y: chainStartY,z: chainStartZ },
-						{ standard: { emissive: 0x222222, roughness: 0.4, metalness: 1 } }
-						)
-					this.physics.add.constraints.lock(t2.body, ball.body)
-					this.starer=this.physics.add.box({mass:300, x: + chainStartX+2, y: 2.5,z: chainStartZ, height: 5,width:1, depth: 1  }, 
-					{ lambert: { color: 'GoldenRod' } })
-					this.cst=this.physics.add.constraints.lock(this.starer.body, ball.body)
-					this.starer.visible = false
-					
-					
-				}
-			}
-		}
+		 	
         AddGround(){
 		 const gridData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADusBZ+q87AAAAJtJREFUeJzt0EENwDAAxLDbNP6UOxh+NEYQ5dl2drFv286598GrA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAu37AD8eaBH5JQdVbAAAAAElFTkSuQmCC';
 		  /*
@@ -99,13 +62,13 @@
             //console.log(texture)
             this.textureWood.wrapS = this.textureWood.wrapT = 1000 // RepeatWrapping
             this.textureWood.repeat.set(5, 5)
-
+/*
 			this.textureWoodNormal.wrapS = this.textureWoodNormal.wrapT = 5 // RepeatWrapping
 			this.textureWoodNormal.repeat.set(5, 5)
 			
 			this.textureWoodRoughness.wrapS = this.textureWoodRoughness.wrapT = 5 // RepeatWrapping
 			this.textureWoodRoughness.repeat.set(5, 5)
-
+*/
 			/*
 			  const material = new THREE.MeshLambertMaterial({ map: this.textureWood,  transparent: true,
                   opacity: 1,
@@ -295,64 +258,6 @@
 			
 		
 		}
-		AddDomino(_x,_y,_z, _angle,_colorFace1,_colorFace2,_colorSide){
-		
-		
-			var textureCube = this.misc.textureCube([this.textureFace, this.textureFace, this.textureSide, this.textureSide, this.textureSide, this.textureSide])
-			/*
-				textureCube.texture.front.repeat.set(1, 1)
-				textureCube.texture.back.repeat.set(1, 1)
-				textureCube.texture.left.repeat.set(1, 1)
-				textureCube.texture.right.repeat.set(1, 1)
-			*/	
-			
-			if(_colorFace2==undefined)
-				_colorFace2=_colorFace1
-			if(_colorSide==undefined)
-				_colorSide=_colorFace1
-				
-			
-			var r1=((_colorFace1 >> 16) & 255)/255
-			var g1=((_colorFace1 >> 8) & 255)/255
-			var b1= (_colorFace1 & 255)/255
-			
-			var r2=((_colorFace2 >> 16) & 255)/255
-			var g2=((_colorFace2 >> 8) & 255)/255
-			var b2= (_colorFace2 & 255)/255
-			
-			var r3=((_colorSide >> 16) & 255)/255
-			var g3=((_colorSide >> 8) & 255)/255
-			var b3= (_colorSide & 255)/255
-			
-			//console.log('---'+bigint+"="+r+","+g+","+b)
-			//console.log('---'+_colorFace2)
-		
-			
-			textureCube.materials[0].name='Face1'
-			textureCube.materials[0].color.r=r1
-			textureCube.materials[0].color.g=g1
-			textureCube.materials[0].color.b=b1
-
-			textureCube.materials[1].name='Face2'
-			textureCube.materials[1].color.r=r2
-			textureCube.materials[1].color.g=g2
-			textureCube.materials[1].color.b=b2
-			
-			for (let i = 2; i < 6; i++) 
-			{
-				textureCube.materials[i].name='Side'+i
-				textureCube.materials[i].color.r=r3
-				textureCube.materials[i].color.g=g3
-				textureCube.materials[i].color.b=b3
-			}
-			
-			//----------------------------------
-			//const box1 = this.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { lambert: { color: _color } })
-			const box1 = this.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { custom: textureCube.materials } )
-			box1.rotation.set(0, _angle, 0)
-			this.physics.add.existing(box1)
-			return box1
-		}
 		AddBar(_x,_y,_z, _angle,_color, _size){
 			const box1 = this.add.box({ x: _x, y: _y,z:_z,height: 2,width: 0.4, depth: _size  }, { lambert: { color: _color } })
 			box1.rotation.set(0, _angle, 0)
@@ -403,7 +308,7 @@
 		AddDominos(x_origin,y_origin,z_origin){
 			
 			
-			this.listDomino=[];
+		
 		  
 
 			//depart
@@ -586,17 +491,18 @@
 		
 		 async create() {
 		 
-		  this.renderer.setPixelRatio(window.devicePixelRatio)
-		 	this.textureFace = await this.load.texture('face')
-				this.textureSide = await this.load.texture('side')
-				this.textureWood = await this.load.texture('wood')
-				this.textureWoodNormal = await this.load.texture('wood_normal')
-				this.textureWoodRoughness = await this.load.texture('wood_roughness')
-				this.bridgeSVG =await this.load.file('bridge')
+			this.renderer.setPixelRatio(window.devicePixelRatio)
+		 	
+			this.textureFace = await this.load.texture('face')
+			this.textureSide = await this.load.texture('side')
+			this.textureWood = await this.load.texture('wood')
+			//this.textureWoodNormal = await this.load.texture('wood_normal')
+			//this.textureWoodRoughness = await this.load.texture('wood_roughness')
+			this.bridgeSVG =await this.load.file('bridge')
 				
 				
-          //const { orbitControls } = await this.warpSpeed()
-		  const { camera, ground, lights, orbitControls } = await this.warpSpeed('-ground')
+			//const { orbitControls } = await this.warpSpeed()
+			const { camera, ground, lights, orbitControls } = await this.warpSpeed('-ground')
 		   const { hemisphereLight, ambientLight, directionalLight } = lights
 		   
 		   	directionalLight.shadow.camera.bottom=-25
@@ -626,8 +532,10 @@
           // or simply add FLAT to the deconstructor
           this.deconstructor.add(FLAT /* same effect as FLAT.destroy */, orbitControls)
 
-
+			this.listDomino=[];
+			this.listBall=[];
 			this.listDominoBackup=[];
+			this.listBallBackup=[];
 
           // add button
           const texture = await this.load.texture('button')
@@ -649,40 +557,24 @@
           button.onInputDown = () => {
             console.log('Button: onInputDown')
 			
-			//
-			
-			for (const dom of this.listDomino) {
-				this.listDominoBackup.push(dom.toJson())
+			//Backup
+			for (const o of this.listDomino) {
+				this.listDominoBackup.push(o.toJson())
 			}
-			console.log(this.listDominoBackup);
+			for (const o of this.listBall) {
+				this.listBallBackup.push(o.toJson())
+			}
+						
+			//console.log(this.listDominoBackup);
+		
+			//Launch balls
+			for (const b of this.listBall) {
+				b.launch()
+			}
 			
-			//this.starer.position.x += 1
-					//this.starer.body.setVelocityX(-12)
-					 //this.starer.body.needUpdate = true
-					 //console.log(this.starer.body)
-					 if(typeof this.starer == null)
-					 {
-					  console.log('click in1')
-					 }
-					 else
-					 {
-						 console.log('click in')
-						 //this.starer.body.physics.constraints.physicsWorld.removeConstraints()
-						 //this.third.physics.destroy(this.starer)
-						this.starer.body.physics.constraints.physicsWorld.removeConstraint(this.cst)
-						  this.starer.body.setCollisionFlags(6)
-					  this.starer.visible = false
-					  this.starer.active = false
-				
-						 //this.third.destroy(this.starer)
-						 //this.starer=null
-					 }
+			
 					 
-					 //  this.starer.body.setCollisionFlags(6)
-				  //this.starer.visible = false
-				  //this.starer.active = false
-				//	this.starer.body.visible = false
-				 // this.starer.body.active = false
+		
           }
           button.onInputOver = () => {
             console.log('Button: onInputOver')
@@ -704,9 +596,11 @@
 			
 			//
 			console.log('---------------destroy');
-			for (const dom of this.listDomino) {
-				console.log(dom.box)
-				this.destroy(dom.box);
+			for (const o of this.listDomino) {
+				o.destroy(this)
+			}
+			for (const o of this.listBall) {
+				o.destroy(this)
 			}
 			console.log('---------------destroy Done');
 			
@@ -714,12 +608,22 @@
 				this.listDomino.pop();
 			}
 			
-			console.log(this.listDomino);
-			console.log(this.listDominoBackup);
+			while(this.listBall.length > 0) {
+				this.listBall.pop();
+			}
+
+
+			//console.log(this.listDomino);
+			//console.log(this.listDominoBackup);
+			console.log('---------------Restore');
 			for (const serialize of this.listDominoBackup) {
-			
 				this.listDomino.push(Domino.fromJson(this, serialize))
 			}
+			/*
+			for (const serialize of this.listBallBackup) {
+				this.listDomino.push(Ball.fromJson(this, serialize))
+			}
+			*/
 			console.log(this.listDomino);
 			
           }
@@ -728,11 +632,11 @@
           }
           this.ui.scene.add(button2)
 		  
-		  
-		  
 			const x_origin = -20//25
 			this.AddGround()
-			this.AddBall(x_origin-6, 0,-2);
+			
+			this.listBall.push(new Ball(this,x_origin-6, 0,-2));
+			
 			this.AddBridge(x_origin+20,0,-2);
 
 			this.AddDominos(x_origin,0,-2);
@@ -798,15 +702,15 @@
         '/lib/ammo/kripken',
         () =>
           new Project({
-          //  anisotropy: 1, // https://threejs.org/docs/#api/en/textures/Texture.anisotropy
-            //antialias: false, // false by default
-			/*
+            anisotropy: 1, // https://threejs.org/docs/#api/en/textures/Texture.anisotropy
+            antialias: true, // false by default
+			
             fixedTimeStep: 1 / 60,
             gravity: { x: 0, y: -9.81, z: 0 }, // the default gravity for all scenes
             maxSubSteps: 1,
-			*/
+			
             //parent: 'myCustomDiv',
-            renderer: new THREE.WebGLRenderer({ antialias: false }), // add a custom renderer if you want
+            renderer: new THREE.WebGLRenderer({ antialias: true }), // add a custom renderer if you want
             scenes: [ MainScene]
           })
       )
