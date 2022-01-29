@@ -186,6 +186,7 @@ class Ball {
 	}
 	destroy(_base)
 	{
+		/*
 		this.starer.active = false
 		this.f1.active = false
 		this.f2.active = false
@@ -220,6 +221,7 @@ class Ball {
 			console.log(o);
 				_base.destroy(o)
 			}
+			*/
 		/*	
 			
 			while(this.listTorus.length > 0) {
@@ -243,5 +245,208 @@ class Ball {
 		//console.log(_json)
 		var data = JSON.parse(_json); // Parsing the json string.
 		return new Ball(_base,data.x, data.y, data.z);
+	}
+}
+
+
+//-------------------------------------------------------
+//Rotator
+//-------------------------------------------------------
+class Rotator {
+	constructor(_base,_x, _y, _z){
+		
+		this.x=_x;
+		this.y=_y;
+		this.z=_z;
+			/*
+			let feet = this.add.box({ x:x_origin, y: _y+0.75,z:_z, height:1.5,width: 0.5, depth: 0.5  }, 
+				{ lambert: { color: 'GoldenRod' } })
+				*/
+			this.feetcyl = _base.physics.add.cylinder({
+				mass: 100,
+              x: _x,
+              y: _y+0.75,
+              z: _z,
+              radiusTop: 0.5,
+              radiusBottom: 0.5,
+               height: 1.5
+			   },{ lambert: { color: 'GoldenRod' } })
+				
+				
+			this.arm = _base.physics.add.box({ mass: 2,x:_x, y: _y+1.75,z:_z, height:0.5,width: 0.5, depth: 14  }, 
+				{ lambert: { color: 'GoldenRod' } })
+			
+			
+			
+			this.cyl = _base.physics.add.cylinder({
+				mass: 0,
+              x: _x,
+              y: _y+2,
+              z: _z,
+              radiusTop: 0.15,
+              radiusBottom: 0.15,
+              height: 0.5
+            })
+			this.cyl.body.setCollisionFlags(6)
+			//cyl.rotation.set( Math.PI/2,0, Math.PI/2)
+			//_base.physics.add.existing(cyl)
+			
+			
+			//_base.physics.add.existing(this.feetcyl, { mass: 100 })
+			//_base.physics.add.existing(arm, { mass: 2 })
+			//this.physics.add.constraints.fixed(feet.body, arm.body)
+			
+			this.cst=_base.physics.add.constraints.hinge(this.feetcyl.body, this.arm.body, {
+				pivotA: { x: 0, y: 1.0, z: 0 },
+				axisA: { y: 1 },
+				})
+		
+	}
+	
+	destroy(_base)
+	{
+		this.feetcyl.body.physics.constraints.physicsWorld.removeConstraint(this.cst)
+		_base.destroy(this.cyl);
+		_base.destroy(this.feetcyl);
+		_base.destroy(this.arm);
+	}
+	toJson() {
+		return JSON.stringify({
+			x: this.x,
+			y: this.y,
+			z: this.z
+			
+		});
+	}
+
+	static fromJson (_base,_json)
+	{
+		//console.log(_json)
+		var data = JSON.parse(_json); // Parsing the json string.
+		return new Rotator(_base,data.x, data.y, data.z);
+	}
+}
+
+//-------------------------------------------------------
+//Bar
+//-------------------------------------------------------
+class Bar {
+	constructor(_base,_x, _y, _z,_angle,_color,_size){
+		
+		this.x=_x;
+		this.y=_y;
+		this.z=_z;
+		this.angle=_angle;
+		this.size=_size;
+		this.color=_color;
+		
+		this.box1 = _base.add.box({ x: _x, y: _y,z:_z,height: 2,width: 0.4, depth: _size  }, { lambert: { color: _color } })
+		this.box1.rotation.set(0, _angle, 0)
+		this.box=_base.physics.add.existing(this.box1)
+		
+		
+		
+	}
+	
+	destroy(_base)
+	{
+		_base.destroy(this.box1);
+	}
+	toJson() {
+		return JSON.stringify({
+			x: this.x,
+			y: this.y,
+			z: this.z,
+			angle: this.angle,
+			size: this.size,
+			color: this.color
+			
+		});
+	}
+
+	static fromJson (_base,_json)
+	{
+		//console.log(_json)
+		var data = JSON.parse(_json); // Parsing the json string.
+		return new Bar(_base,data.x, data.y, data.z, data.angle,  data.color, data.size);
+	}
+}
+
+
+//-------------------------------------------------------
+//Bridge
+//-------------------------------------------------------
+class Bridge{
+	constructor(_base,_x,_y,_z){
+		
+		//console.log('create bridge,'+_x+','+_y+','+_z)
+		this.x=_x;
+		this.y=_y;
+		this.z=_z;
+		
+		  // get the shape from the sve file
+          //const svg = this.cache.html.get('bridge')
+		  
+		  
+		  //const svg = this.load.file('bridge')
+		  //console.log('svg')
+		  //console.log(this.bridgeSVG)
+		  
+		  
+          const bridgeShape = _base.transform.fromSVGtoShape(_base.bridgeSVG)
+			//console.log('bridgeShape')
+		  //console.log(bridgeShape)
+		  
+          // set scaling variable
+          const scale = 20//25
+		  
+          // extrude the shape to a 3d object
+          this.bridge = _base.add.extrude({
+            shape: bridgeShape[0],
+            depth: 120,
+			 //amount : 500,
+			bevelEnabled: false,
+            bevelSize: 2,
+            bevelThickness: 2
+          },{ lambert: { color: 'DarkKhaki' }} )
+
+          // scale the shape
+          this.bridge.scale.set(1 / -scale, 1 / -scale, 1 / scale)
+
+          // add the desired shape (in this case, concave, which is always static)
+          this.bridge.shape = 'concave'
+		  
+	
+          // offset the position by the half of the shape's size
+          this.bridge.position.setY(this.bridge.geometry.boundingBox.max.y / scale+ _y)
+		  this.bridge.position.setX(_x)
+		  this.bridge.position.setZ(_z)
+
+          // add a physics body
+          _base.physics.add.existing(this.bridge)
+
+          // set some body properties
+          this.bridge.body.setAngularFactor(0, 0, 0)
+          this.bridge.body.setLinearFactor(0, 0, 0)
+		  
+		  this.bridge.body.setFriction(0.2)
+		}
+		destroy(_base)
+	{
+		_base.destroy(this.bridge);
+	}
+	toJson() {
+		return JSON.stringify({
+			x: this.x,
+			y: this.y,
+			z: this.z,
+		});
+	}
+
+	static fromJson (_base,_json)
+	{
+		//console.log(_json)
+		var data = JSON.parse(_json); // Parsing the json string.
+		return new Bridge(_base,data.x, data.y, data.z);
 	}
 }

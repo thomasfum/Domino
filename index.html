@@ -144,54 +144,7 @@
                 //Features = Object.assign({ ground }, Features);
 		  */
 		}
-		AddBridge(x,y,z){
-		  // get the shape from the sve file
-          //const svg = this.cache.html.get('bridge')
-		  
-		  
-		  //const svg = this.load.file('bridge')
-		  //console.log('svg')
-		  //console.log(this.bridgeSVG)
-		  
-		  
-          const bridgeShape = this.transform.fromSVGtoShape(this.bridgeSVG)
-			//console.log('bridgeShape')
-		  //console.log(bridgeShape)
-		  
-          // set scaling variable
-          const scale = 20//25
-		  
-          // extrude the shape to a 3d object
-          const bridge = this.add.extrude({
-            shape: bridgeShape[0],
-            depth: 120,
-			 //amount : 500,
-			bevelEnabled: false,
-            bevelSize: 2,
-            bevelThickness: 2
-          },{ lambert: { color: 'DarkKhaki' }} )
-
-          // scale the shape
-          bridge.scale.set(1 / -scale, 1 / -scale, 1 / scale)
-
-          // add the desired shape (in this case, concave, which is always static)
-          bridge.shape = 'concave'
-		  
-	
-          // offset the position by the half of the shape's size
-          bridge.position.setY(bridge.geometry.boundingBox.max.y / scale+ y)
-		  bridge.position.setX(x)
-		  bridge.position.setZ(z)
-
-          // add a physics body
-          this.physics.add.existing(bridge)
-
-          // set some body properties
-          bridge.body.setAngularFactor(0, 0, 0)
-          bridge.body.setLinearFactor(0, 0, 0)
-		  
-		  bridge.body.setFriction(0.2)
-		}
+		
 		AddBalancator(_x,_y,_z){
 			_y=_y+2.5
 			const box1 = this.add.box({ x: _x+1, y: _y+0,z:_z+1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
@@ -258,53 +211,7 @@
 			
 		
 		}
-		AddBar(_x,_y,_z, _angle,_color, _size){
-			const box1 = this.add.box({ x: _x, y: _y,z:_z,height: 2,width: 0.4, depth: _size  }, { lambert: { color: _color } })
-			box1.rotation.set(0, _angle, 0)
-			this.physics.add.existing(box1)
-			return box1
-		}
-		AddRotator(x_origin,y_origin,z_origin){
-			/*
-			let feet = this.add.box({ x:x_origin, y: y_origin+0.75,z:z_origin, height:1.5,width: 0.5, depth: 0.5  }, 
-				{ lambert: { color: 'GoldenRod' } })
-				*/
-			let feetcyl = this.add.cylinder({
-              x: x_origin,
-              y: y_origin+0.75,
-              z: z_origin,
-              radiusTop: 0.5,
-              radiusBottom: 0.5,
-               height: 1.5
-			   },{ lambert: { color: 'GoldenRod' } })
-				
-				
-			let arm = this.add.box({ x:x_origin, y: y_origin+1.75,z:z_origin, height:0.5,width: 0.5, depth: 14  }, 
-				{ lambert: { color: 'GoldenRod' } })
-			
-			
-			
-			const cyl = this.add.cylinder({
-              x: x_origin,
-              y: y_origin+2,
-              z: z_origin,
-              radiusTop: 0.15,
-              radiusBottom: 0.15,
-              height: 0.5
-            })
-			//cyl.rotation.set( Math.PI/2,0, Math.PI/2)
-			//this.physics.add.existing(cyl)
-			
-			
-			this.physics.add.existing(feetcyl, { mass: 100 })
-			this.physics.add.existing(arm, { mass: 2 })
-			//this.physics.add.constraints.fixed(feet.body, arm.body)
-			
-			this. physics.add.constraints.hinge(feetcyl.body, arm.body, {
-				pivotA: { x: 0, y: 1.0, z: 0 },
-				axisA: { y: 1 },
-				})
-		}
+
 		AddDominos(x_origin,y_origin,z_origin){
 			
 			
@@ -418,7 +325,7 @@
 			this.listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin +3.5,-Math.PI/2,0xff69b4))
 			this.listDomino.push(new Domino(this,4 +1.5+ x_origin, 1,z_origin +5.0,-Math.PI/2,0xff69b4))
 						
-			this.AddBar(4 +1.7+ x_origin, 1,z_origin +6.0,-Math.PI/2,0xff69b4,9)
+			
 			
 			
 			/*
@@ -534,8 +441,15 @@
 
 			this.listDomino=[];
 			this.listBall=[];
+			this.listRotator=[];
+			this.listBar=[];
+			this.listBridge=[];
+			
 			this.listDominoBackup=[];
 			this.listBallBackup=[];
+			this.listRotatorBackup=[];
+			this.listBarBackup=[];
+			this.listBridgeBackup=[];
 
           // add button
           const texture = await this.load.texture('button')
@@ -564,8 +478,18 @@
 			for (const o of this.listBall) {
 				this.listBallBackup.push(o.toJson())
 			}
-						
+			for (const o of this.listRotator) {
+				this.listRotatorBackup.push(o.toJson())
+			}
+			for (const o of this.listBar) {
+				this.listBarBackup.push(o.toJson())
+			}
+			for (const o of this.listBridge) {
+				this.listBridgeBackup.push(o.toJson())
+			}
 			//console.log(this.listDominoBackup);
+		
+		
 		
 			//Launch balls
 			for (const b of this.listBall) {
@@ -602,6 +526,16 @@
 			for (const o of this.listBall) {
 				o.destroy(this)
 			}
+			for (const o of this.listRotator) {
+				o.destroy(this)
+			}
+			for (const o of this.listBar) {
+				o.destroy(this)
+			}
+			for (const o of this.listBridge) {
+				o.destroy(this)
+			}
+			
 			console.log('---------------destroy Done');
 			
 			while(this.listDomino.length > 0) {
@@ -610,6 +544,16 @@
 			
 			while(this.listBall.length > 0) {
 				this.listBall.pop();
+			}
+			
+			while(this.listRotator.length > 0) {
+				this.listRotator.pop();
+			}
+			while(this.listBar.length > 0) {
+				this.listBar.pop();
+			}
+			while(this.listBridge.length > 0) {
+				this.listBridge.pop();
 			}
 
 
@@ -624,6 +568,17 @@
 				this.listDomino.push(Ball.fromJson(this, serialize))
 			}
 			*/
+			
+			for (const serialize of this.listRotatorBackup) {
+				this.listRotator.push(Rotator.fromJson(this, serialize))
+			}
+			for (const serialize of this.listBarBackup) {
+				this.listBar.push(Bar.fromJson(this, serialize))
+			}
+			for (const serialize of this.listBridgeBackup) {
+				this.listBridge.push(Bridge.fromJson(this, serialize))
+			}
+			
 			console.log(this.listDomino);
 			
           }
@@ -637,11 +592,14 @@
 			
 			this.listBall.push(new Ball(this,x_origin-6, 0,-2));
 			
-			this.AddBridge(x_origin+20,0,-2);
+			this.listBar.push(new Bar(this,4 +1.7+ x_origin, 1,4,-Math.PI/2,0xff69b4,9));
+			
+			//this.AddBridge(x_origin+20,0,-2);
+			this.listBridge.push(new Bridge(this,x_origin+20,0,-2));
 
 			this.AddDominos(x_origin,0,-2);
 
-			this.AddRotator(x_origin+40,0,+2);
+			this.listRotator.push(new Rotator(this,x_origin+40,0,+2));
 
 			this.AddBalancator(x_origin+5.5,0,-2)
 			
