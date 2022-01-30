@@ -85,9 +85,18 @@ class Domino {
 			//----------------------------------
 			//this.box = _base.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { lambert: { color: _colorFace1 } })
 			//this.box = _base.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { custom: textureCube.materials } )
-			this.box = _base.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { custom: cubeMaterials } )
+			this.box = _base.add.box({ name:'dom',x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { custom: cubeMaterials } )
 			this.box.rotation.set(0, _angle, 0)
 			_base.physics.add.existing(this.box)
+			
+			/*
+			this.box.body.on.collision((otherObject, event) => {
+            if (otherObject.name !== 'ground') 
+				console.log(`Domino and ${otherObject.name}: ${event}`)
+			})
+			*/
+		  
+	  
 			//return box1
 			
   }
@@ -156,7 +165,7 @@ class Ball {
 			if (i === 2) 
 			{
 				this.ball = _base.physics.add.sphere(
-					{ mass: 2, radius: 0.4, x: + _x+0.2, y: _y,z: _z },
+					{ name: 'Ball',mass: 2, radius: 0.4, x: + _x+0.2, y: _y,z: _z },
 					{ standard: { emissive: 0x222222, roughness: 0.4, metalness: 1 } }
 					)
 				this.CstBall=_base.physics.add.constraints.lock(this.ball.body,t2.body)
@@ -241,7 +250,7 @@ class Rotator {
 			   },{ lambert: { color: 'GoldenRod' } })
 				
 				
-			this.arm = _base.physics.add.box({ mass: 2,x:_x, y: _y+1.75,z:_z, height:0.5,width: 0.5, depth: 14  }, 
+			this.arm = _base.physics.add.box({name: 'Rotator', mass: 2,x:_x, y: _y+1.75,z:_z, height:0.5,width: 0.5, depth: 14  }, 
 				{ lambert: { color: 'GoldenRod' } })
 			
 			
@@ -307,7 +316,7 @@ class Bar {
 		this.size=_size;
 		this.color=_color;
 		
-		this.box1 = _base.add.box({ x: _x, y: _y,z:_z,height: 2,width: 0.4, depth: _size  }, { lambert: { color: _color } })
+		this.box1 = _base.add.box({name: 'Bar', x: _x, y: _y,z:_z,height: 2,width: 0.4, depth: _size  }, { lambert: { color: _color } })
 		this.box1.rotation.set(0, _angle, 0)
 		this.box=_base.physics.add.existing(this.box1)
 		
@@ -367,6 +376,7 @@ class Bridge{
 		  
           // extrude the shape to a 3d object
           this.bridge = _base.add.extrude({
+			name: 'Bridge',
             shape: bridgeShape[0],
             depth: 120,
 			 //amount : 500,
@@ -471,11 +481,11 @@ class Balancator{
 			this.cyl.body.setLinearFactor(0, 0, 0)
 			
 			
-			this.box5 = _base.add.box({ x: _x, y: _y+1,z:_z+0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
+			this.box5 = _base.add.box({ name: 'Balancator A', x: _x, y: _y+1,z:_z+0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
 			this.box5.rotation.set(0, -Math.PI/2, Math.PI/8)
 			_base.physics.add.existing(this.box5)
 		
-			this.box6 = _base.add.box({ x: _x, y: _y+1,z:_z-0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
+			this.box6 = _base.add.box({ name: 'Balancator B',x: _x, y: _y+1,z:_z-0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
 			this.box6.rotation.set(0, Math.PI/2, Math.PI/8)
 			_base.physics.add.existing(this.box6)
 			this.cst1=_base.physics.add.constraints.lock(this.box5.body, this.box6.body)
@@ -514,5 +524,15 @@ class Balancator{
 		//console.log(_json)
 		var data = JSON.parse(_json); // Parsing the json string.
 		return new Balancator(_base,data.x, data.y, data.z);
+	}
+}
+
+//-------------------------------------------------------
+//DominoScene
+//-------------------------------------------------------
+class DominoScene{
+	constructor(_base)
+	{
+		this.base= _base
 	}
 }
