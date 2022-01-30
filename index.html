@@ -145,73 +145,7 @@
 		  */
 		}
 		
-		AddBalancator(_x,_y,_z){
-			_y=_y+2.5
-			const box1 = this.add.box({ x: _x+1, y: _y+0,z:_z+1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
-			box1.rotation.set(0, -Math.PI/2, Math.PI/8)
-			this.physics.add.existing(box1)
-			  // set some body properties
-			box1.body.setAngularFactor(0, 0, 0)
-			box1.body.setLinearFactor(0, 0, 0)
-		
-			const box2 = this.add.box({ x: _x+1, y: _y+0,z:_z-1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
-			box2.rotation.set(0, Math.PI/2, Math.PI/8)
-			this.physics.add.existing(box2)
-			//this.physics.add.constraints.lock (box1.body, box2.body)
-			
-			box2.body.setAngularFactor(0, 0, 0)
-			box2.body.setLinearFactor(0, 0, 0)
-			
-			const box3 = this.add.box({ x: _x-1, y: _y+0,z:_z+1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
-			box3.rotation.set(0, -Math.PI/2, Math.PI/8)
-			this.physics.add.existing(box3)
-			box3.body.setAngularFactor(0, 0, 0)
-			box3.body.setLinearFactor(0, 0, 0)
-		
-			const box4 = this.add.box({ x: _x-1, y: _y+0,z:_z-1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
-			box4.rotation.set(0, Math.PI/2, Math.PI/8)
-			this.physics.add.existing(box4)
-			box4.body.setAngularFactor(0, 0, 0)
-			box4.body.setLinearFactor(0, 0, 0)
-			
-			
-			//this.physics.add.constraints.lock (box3.body, box4.body)
-			
-			const cyl = this.add.cylinder({
-              x: _x,
-              y: _y+2.4,
-              z: _z,
-              radiusTop: 0.1,
-              radiusBottom: 0.1,
-              height: 2.4
-            })
-			cyl.rotation.set( Math.PI/2,0, Math.PI/2)
-			this.physics.add.existing(cyl)
-			//this.physics.add.constraints.fixed (box1.body, cyl.body)
-			//this.physics.add.constraints.fixed (box3.body, cyl.body)
-			cyl.body.setAngularFactor(0, 0, 0)
-			cyl.body.setLinearFactor(0, 0, 0)
-			
-			
-			const box5 = this.add.box({ x: _x, y: _y+1,z:_z+0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
-			box5.rotation.set(0, -Math.PI/2, Math.PI/8)
-			this.physics.add.existing(box5)
-		
-			const box6 = this.add.box({ x: _x, y: _y+1,z:_z-0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
-			box6.rotation.set(0, Math.PI/2, Math.PI/8)
-			this.physics.add.existing(box6)
-			this.physics.add.constraints.lock(box5.body, box6.body)
-			
-			this.physics.add.constraints.lock(box5.body, cyl.body)
-			
-			this. physics.add.constraints.hinge(box5.body, cyl.body, {
-				pivotA: { x: 0, y: 1.5, z: 0 },
-				axisA: { z: 1 },
-				})
-			
-		
-		}
-
+	
 		AddDominos(x_origin,y_origin,z_origin){
 			
 			
@@ -408,7 +342,6 @@
 			this.bridgeSVG =await this.load.file('bridge')
 				
 				
-			//const { orbitControls } = await this.warpSpeed()
 			const { camera, ground, lights, orbitControls } = await this.warpSpeed('-ground')
 		   const { hemisphereLight, ambientLight, directionalLight } = lights
 		   
@@ -444,12 +377,14 @@
 			this.listRotator=[];
 			this.listBar=[];
 			this.listBridge=[];
+			this.listBalancator=[];
 			
 			this.listDominoBackup=[];
 			this.listBallBackup=[];
 			this.listRotatorBackup=[];
 			this.listBarBackup=[];
 			this.listBridgeBackup=[];
+			this.listBalancatorBackup=[];
 
           // add button
           const texture = await this.load.texture('button')
@@ -487,10 +422,11 @@
 			for (const o of this.listBridge) {
 				this.listBridgeBackup.push(o.toJson())
 			}
-			//console.log(this.listDominoBackup);
+			for (const o of this.listBalancator) {
+				this.listBalancatorBackup.push(o.toJson())
+			}
 		
-		
-		
+				
 			//Launch balls
 			for (const b of this.listBall) {
 				b.launch()
@@ -535,17 +471,16 @@
 			for (const o of this.listBridge) {
 				o.destroy(this)
 			}
-			
+			for (const o of this.listBalancator) {
+				o.destroy(this)
+			}
 			console.log('---------------destroy Done');
-			
 			while(this.listDomino.length > 0) {
 				this.listDomino.pop();
 			}
-			
 			while(this.listBall.length > 0) {
 				this.listBall.pop();
 			}
-			
 			while(this.listRotator.length > 0) {
 				this.listRotator.pop();
 			}
@@ -555,10 +490,9 @@
 			while(this.listBridge.length > 0) {
 				this.listBridge.pop();
 			}
-
-
-			//console.log(this.listDomino);
-			//console.log(this.listDominoBackup);
+			while(this.listBalancator.length > 0) {
+				this.listBalancator.pop();
+			}
 			console.log('---------------Restore');
 			for (const serialize of this.listDominoBackup) {
 				this.listDomino.push(Domino.fromJson(this, serialize))
@@ -579,6 +513,10 @@
 				this.listBridge.push(Bridge.fromJson(this, serialize))
 			}
 			
+			for (const serialize of this.listBalancatorBackup) {
+				this.listBalancator.push(Balancator.fromJson(this, serialize))
+			}
+			
 			console.log(this.listDomino);
 			
           }
@@ -587,21 +525,17 @@
           }
           this.ui.scene.add(button2)
 		  
+		  
+		  //-------------------------------scene
 			const x_origin = -20//25
 			this.AddGround()
+			this.AddDominos(x_origin,0,-2);
 			
 			this.listBall.push(new Ball(this,x_origin-6, 0,-2));
-			
 			this.listBar.push(new Bar(this,4 +1.7+ x_origin, 1,4,-Math.PI/2,0xff69b4,9));
-			
-			//this.AddBridge(x_origin+20,0,-2);
 			this.listBridge.push(new Bridge(this,x_origin+20,0,-2));
-
-			this.AddDominos(x_origin,0,-2);
-
 			this.listRotator.push(new Rotator(this,x_origin+40,0,+2));
-
-			this.AddBalancator(x_origin+5.5,0,-2)
+			this.listBalancator.push(new Balancator(this,x_origin+5.5,0,-2));
 			
         }
 

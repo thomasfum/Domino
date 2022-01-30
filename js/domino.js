@@ -450,3 +450,105 @@ class Bridge{
 		return new Bridge(_base,data.x, data.y, data.z);
 	}
 }
+
+//-------------------------------------------------------
+//Balancator
+//-------------------------------------------------------
+class Balancator{
+	constructor(_base,_x,_y,_z){
+			this.x=_x;
+			this.y=_y;
+			this.z=_z;
+		
+			_y=_y+2.5
+			this.box1 = _base.add.box({ x: _x+1, y: _y+0,z:_z+1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
+			this.box1.rotation.set(0, -Math.PI/2, Math.PI/8)
+			_base.physics.add.existing(this.box1)
+			  // set some body properties
+			this.box1.body.setAngularFactor(0, 0, 0)
+			this.box1.body.setLinearFactor(0, 0, 0)
+		
+			this.box2 = _base.add.box({ x: _x+1, y: _y+0,z:_z-1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
+			this.box2.rotation.set(0, Math.PI/2, Math.PI/8)
+			_base.physics.add.existing(this.box2)
+			//_base.physics.add.constraints.lock (box1.body, box2.body)
+			
+			this.box2.body.setAngularFactor(0, 0, 0)
+			this.box2.body.setLinearFactor(0, 0, 0)
+			
+			this.box3 = _base.add.box({ x: _x-1, y: _y+0,z:_z+1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
+			this.box3.rotation.set(0, -Math.PI/2, Math.PI/8)
+			_base.physics.add.existing(this.box3)
+			this.box3.body.setAngularFactor(0, 0, 0)
+			this.box3.body.setLinearFactor(0, 0, 0)
+		
+			this.box4 = _base.add.box({ x: _x-1, y: _y+0,z:_z-1.1,height: 5,width: 0.4, depth: 0.4  }, { lambert: { color: 'GoldenRod' } })
+			this.box4.rotation.set(0, Math.PI/2, Math.PI/8)
+			_base.physics.add.existing(this.box4)
+			this.box4.body.setAngularFactor(0, 0, 0)
+			this.box4.body.setLinearFactor(0, 0, 0)
+			
+			
+			//_base.physics.add.constraints.lock (box3.body, box4.body)
+			
+			this.cyl = _base.add.cylinder({
+              x: _x,
+              y: _y+2.4,
+              z: _z,
+              radiusTop: 0.1,
+              radiusBottom: 0.1,
+              height: 2.4
+            })
+			this.cyl.rotation.set( Math.PI/2,0, Math.PI/2)
+			_base.physics.add.existing(this.cyl)
+			//_base.physics.add.constraints.fixed (box1.body, cyl.body)
+			//_base.physics.add.constraints.fixed (box3.body, cyl.body)
+			this.cyl.body.setAngularFactor(0, 0, 0)
+			this.cyl.body.setLinearFactor(0, 0, 0)
+			
+			
+			this.box5 = _base.add.box({ x: _x, y: _y+1,z:_z+0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
+			this.box5.rotation.set(0, -Math.PI/2, Math.PI/8)
+			_base.physics.add.existing(this.box5)
+		
+			this.box6 = _base.add.box({ x: _x, y: _y+1,z:_z-0.6,height: 3,width: 0.1, depth: 0.4  }, { lambert: { color: 'LightGreen' } })
+			this.box6.rotation.set(0, Math.PI/2, Math.PI/8)
+			_base.physics.add.existing(this.box6)
+			this.cst1=_base.physics.add.constraints.lock(this.box5.body, this.box6.body)
+			
+			this.cst2=_base.physics.add.constraints.lock(this.box5.body, this.cyl.body)
+			
+			this.cst3=_base. physics.add.constraints.hinge(this.box5.body, this.cyl.body, {
+				pivotA: { x: 0, y: 1.5, z: 0 },
+				axisA: { z: 1 },
+				})
+	}
+	destroy(_base)
+	{
+		_base.destroy(this.box1);
+		_base.destroy(this.box2);
+		_base.destroy(this.box3);
+		_base.destroy(this.box4);
+		this.box5.body.physics.constraints.physicsWorld.removeConstraint(this.cst1)
+		this.box5.body.physics.constraints.physicsWorld.removeConstraint(this.cst2)
+		this.box5.body.physics.constraints.physicsWorld.removeConstraint(this.cst3)
+		_base.destroy(this.box5);
+		_base.destroy(this.box6);
+		_base.destroy(this.cyl);
+		
+	}
+	toJson() {
+		return JSON.stringify({
+			x: this.x,
+			y: this.y,
+			z: this.z,
+		});
+	}
+
+	static fromJson (_base,_json)
+	{
+		//console.log(_json)
+		var data = JSON.parse(_json); // Parsing the json string.
+		return new Balancator(_base,data.x, data.y, data.z);
+	}
+}
