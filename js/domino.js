@@ -115,7 +115,6 @@ class Domino {
 		return new Domino(_base,data.x, data.y, data.z, data.angle, data.colorFace1, data.colorFace2, data.colorFace3);
 	}
 }
-
 //-------------------------------------------------------
 //Ball
 //-------------------------------------------------------
@@ -137,10 +136,10 @@ class Ball {
 		
 		
 
-		_base.physics.add.constraints.lock(this.f1.body, this.f2.body)
+		this.CstFeet=_base.physics.add.constraints.lock(this.f1.body, this.f2.body)
 		
 		this.listTorus=[];
-		this.listCst=[];
+		
 		for (let i = 2; i <= nbTorus; i++) 
 		{
 			// chain
@@ -160,13 +159,12 @@ class Ball {
 					{ mass: 2, radius: 0.4, x: + _x+0.2, y: _y,z: _z },
 					{ standard: { emissive: 0x222222, roughness: 0.4, metalness: 1 } }
 					)
-				_base.physics.add.constraints.lock(t2.body, this.ball.body)
+				this.CstBall=_base.physics.add.constraints.lock(this.ball.body,t2.body)
+				
 				this.starer=_base.physics.add.box({mass:300, x: + _x+2, y: 2.5,z: _z, height: 5,width:1, depth: 1  }, 
 				{ lambert: { color: 'GoldenRod' } })
 				this.cst=_base.physics.add.constraints.lock(this.starer.body, this.ball.body)
 				this.starer.visible = false
-				
-				
 			}
 			
 		}
@@ -178,57 +176,29 @@ class Ball {
 		//this.starer.body.physics.constraints.physicsWorld.removeConstraints()
 		//this.third.physics.destroy(this.starer)
 		this.starer.body.physics.constraints.physicsWorld.removeConstraint(this.cst)
+		this.cst=null
 		this.starer.body.setCollisionFlags(6)
-		this.starer.visible = false
-		this.starer.active = false
+		//this.starer.visible = false
+		//this.starer.active = false
 		//this.third.destroy(this.starer)
 		//this.starer=null
 	}
 	destroy(_base)
 	{
-		/*
-		this.starer.active = false
-		this.f1.active = false
-		this.f2.active = false
-		this.ball.active = false
+		this.ball.body.physics.constraints.physicsWorld.removeConstraint(this.CstBall)
+		if(this.cst!=null)
+			this.starer.body.physics.constraints.physicsWorld.removeConstraint(this.cst)
+		_base.destroy(this.ball);
+		this.f1.body.physics.constraints.physicsWorld.removeConstraint(this.CstFeet)
 		
-		this.starer.body.setCollisionFlags(6)
-		this.f1.body.setCollisionFlags(6)
-		this.f2.body.setCollisionFlags(6)
-		this.ball.body.setCollisionFlags(6)
 		
-		for (const o of this.listTorus) {
-				o.active = false
-				o.body.setCollisionFlags(6)
-				
-				console.log(o.body.physics.constraints.physicsWorld)
-				o.body.physics.constraints.physicsWorld.removeConstraint(o.body.physics.constraints.physicsWorld)
-				console.log(o.body)
-				
-			}
-		//_base.destroy(this.cst)
-		
-		_base.destroy(this.starer);
 		_base.destroy(this.f1);
 		_base.destroy(this.f2);
-		console.log('---------------destroy Torus');
-		
-		//_base.destroy(this.ball);
-		
-		console.log(this.listTorus)
-			console.log('this.listTorus')
-		for (const o of this.listTorus) {
-			console.log(o);
-				_base.destroy(o)
+		while(this.listTorus.length > 0) {
+				const o=this.listTorus.pop();
+				_base.destroy(o);
 			}
-			*/
-		/*	
-			
-			while(this.listTorus.length > 0) {
-				this.listTorus.pop();
-			}
-			*/
-		
+		_base.destroy(this.starer);	
 		
 	}
 	toJson() {
@@ -247,8 +217,6 @@ class Ball {
 		return new Ball(_base,data.x, data.y, data.z);
 	}
 }
-
-
 //-------------------------------------------------------
 //Rotator
 //-------------------------------------------------------
@@ -326,7 +294,6 @@ class Rotator {
 		return new Rotator(_base,data.x, data.y, data.z);
 	}
 }
-
 //-------------------------------------------------------
 //Bar
 //-------------------------------------------------------
@@ -371,8 +338,6 @@ class Bar {
 		return new Bar(_base,data.x, data.y, data.z, data.angle,  data.color, data.size);
 	}
 }
-
-
 //-------------------------------------------------------
 //Bridge
 //-------------------------------------------------------
@@ -450,7 +415,6 @@ class Bridge{
 		return new Bridge(_base,data.x, data.y, data.z);
 	}
 }
-
 //-------------------------------------------------------
 //Balancator
 //-------------------------------------------------------

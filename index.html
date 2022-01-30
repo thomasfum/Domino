@@ -406,6 +406,27 @@
           button.onInputDown = () => {
             console.log('Button: onInputDown')
 			
+			
+			//empty backup
+			while(this.listDominoBackup.length > 0) {
+				this.listDominoBackup.pop();
+			}
+			while(this.listBallBackup.length > 0) {
+				this.listBallBackup.pop();
+			}
+			while(this.listRotatorBackup.length > 0) {
+				this.listRotatorBackup.pop();
+			}
+			while(this.listBarBackup.length > 0) {
+				this.listBarBackup.pop();
+			}
+			while(this.listBridgeBackup.length > 0) {
+				this.listBridgeBackup.pop();
+			}
+			while(this.listBalancatorBackup.length > 0) {
+				this.listBalancatorBackup.pop();
+			}
+			
 			//Backup
 			for (const o of this.listDomino) {
 				this.listDominoBackup.push(o.toJson())
@@ -497,12 +518,9 @@
 			for (const serialize of this.listDominoBackup) {
 				this.listDomino.push(Domino.fromJson(this, serialize))
 			}
-			/*
 			for (const serialize of this.listBallBackup) {
-				this.listDomino.push(Ball.fromJson(this, serialize))
+				this.listBall.push(Ball.fromJson(this, serialize))
 			}
-			*/
-			
 			for (const serialize of this.listRotatorBackup) {
 				this.listRotator.push(Rotator.fromJson(this, serialize))
 			}
@@ -512,7 +530,6 @@
 			for (const serialize of this.listBridgeBackup) {
 				this.listBridge.push(Bridge.fromJson(this, serialize))
 			}
-			
 			for (const serialize of this.listBalancatorBackup) {
 				this.listBalancator.push(Balancator.fromJson(this, serialize))
 			}
