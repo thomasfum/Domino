@@ -99,7 +99,8 @@ class Domino {
 						//console.log('Domino'+ this.id+' and ${otherObject.name}: ${event}')
 						//console.log('dom_'+ this.id+' and '+otherObject.name+': '+event)
 						this.hurt=true
-						_base.audio.play();
+						if(_base.sound==true)
+							_base.audio.play();
 					}
 				}
 			})
@@ -617,66 +618,80 @@ class DominoScene{
 	destroy(){
 		console.log('---------------destroy');
 		
-			for (const o of this.listDomino) {
-				o.destroy(this.base)
-			}
-			for (const o of this.listBall) {
-				o.destroy(this.base)
-			}
-			for (const o of this.listRotator) {
-				o.destroy(this.base)
-			}
-			for (const o of this.listBar) {
-				o.destroy(this.base)
-			}
-			for (const o of this.listBridge) {
-				o.destroy(this.base)
-			}
-			for (const o of this.listBalancator) {
-				o.destroy(this.base)
-			}
-			console.log('---------------destroy Done');
-			while(this.listDomino.length > 0) {
-				this.listDomino.pop();
-			}
-			while(this.listBall.length > 0) {
-				this.listBall.pop();
-			}
-			while(this.listRotator.length > 0) {
-				this.listRotator.pop();
-			}
-			while(this.listBar.length > 0) {
-				this.listBar.pop();
-			}
-			while(this.listBridge.length > 0) {
-				this.listBridge.pop();
-			}
-			while(this.listBalancator.length > 0) {
-				this.listBalancator.pop();
-			}
+		for (const o of this.listDomino) {
+			o.destroy(this.base)
+		}
+		for (const o of this.listBall) {
+			o.destroy(this.base)
+		}
+		for (const o of this.listRotator) {
+			o.destroy(this.base)
+		}
+		for (const o of this.listBar) {
+			o.destroy(this.base)
+		}
+		for (const o of this.listBridge) {
+			o.destroy(this.base)
+		}
+		for (const o of this.listBalancator) {
+			o.destroy(this.base)
+		}
+		console.log('---------------destroy Done');
+		while(this.listDomino.length > 0) {
+			this.listDomino.pop();
+		}
+		while(this.listBall.length > 0) {
+			this.listBall.pop();
+		}
+		while(this.listRotator.length > 0) {
+			this.listRotator.pop();
+		}
+		while(this.listBar.length > 0) {
+			this.listBar.pop();
+		}
+		while(this.listBridge.length > 0) {
+			this.listBridge.pop();
+		}
+		while(this.listBalancator.length > 0) {
+			this.listBalancator.pop();
+		}
 			
 	}
 	restore(){
-			console.log('---------------Restore');
-			for (const serialize of this.listDominoBackup) {
-				this.listDomino.push(Domino.fromJson(this.base, serialize))
-			}
-			for (const serialize of this.listBallBackup) {
-				this.listBall.push(Ball.fromJson(this.base, serialize))
-			}
-			for (const serialize of this.listRotatorBackup) {
-				this.listRotator.push(Rotator.fromJson(this.base, serialize))
-			}
-			for (const serialize of this.listBarBackup) {
-				this.listBar.push(Bar.fromJson(this.base, serialize))
-			}
-			for (const serialize of this.listBridgeBackup) {
-				this.listBridge.push(Bridge.fromJson(this.base, serialize))
-			}
-			for (const serialize of this.listBalancatorBackup) {
-				this.listBalancator.push(Balancator.fromJson(this.base, serialize))
-			}
+		console.log('---------------Restore');
+		for (const serialize of this.listDominoBackup) {
+			this.listDomino.push(Domino.fromJson(this.base, serialize))
 		}
+		for (const serialize of this.listBallBackup) {
+			this.listBall.push(Ball.fromJson(this.base, serialize))
+		}
+		for (const serialize of this.listRotatorBackup) {
+			this.listRotator.push(Rotator.fromJson(this.base, serialize))
+		}
+		for (const serialize of this.listBarBackup) {
+			this.listBar.push(Bar.fromJson(this.base, serialize))
+		}
+		for (const serialize of this.listBridgeBackup) {
+			this.listBridge.push(Bridge.fromJson(this.base, serialize))
+		}
+		for (const serialize of this.listBalancatorBackup) {
+			this.listBalancator.push(Balancator.fromJson(this.base, serialize))
+		}
+	}
+	save(){
+		this.backup()
+		var f=JSON.stringify({
+			domino: this.listDominoBackup,
+			ball: this.listBallBackup,
+			rotator: this.listRotatorBackup,
+			bar: this.listBarBackup,
+			bridge: this.listBridgeBackup,
+			balancator: this.listBalancatorBackup
+			})
+			console.log(f)
+	}
+	load(){
+	}
 		
 		
 	AddDomino(x,y,z, angle,colorFace1,colorFace2,colorSide) 

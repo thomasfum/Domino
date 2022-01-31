@@ -20,7 +20,9 @@
 		class MainScene extends Scene3D {
 			async preload() {
 			await this.load.preload('bridge', '/assets/svg/bridge6.svg')
-			await this.load.preload('button', '/assets/button/button_sprite_sheet.png')
+			await this.load.preload('buttonPlay', '/assets/button/play.png')
+			await this.load.preload('buttonReset', '/assets/button/reset.png')
+			await this.load.preload('buttonSound', '/assets/button/sound.png')
 			await this.load.preload('face', '/assets/img/flat0.png')
 			await this.load.preload('side', '/assets/img/flat0.png')
 			await this.load.preload('wood', '/assets/img/wood3.jpg')
@@ -28,7 +30,7 @@
 			//await this.load.preload('wood_roughness', '/assets/img/wood3_roughness.jpg')
 			//console.log(this.load)
 			//this.load.audio('theme', [ 'assets/audio/toc.mp3'  ]);
-			
+			this.sound=false
         }
 		 	
         AddGround(){
@@ -332,8 +334,7 @@
 				
 		
 			this.audio = document.getElementById("audio");
-			//this.audio.play();
-			
+		
 				
 			const { camera, ground, lights, orbitControls } = await this.warpSpeed('-ground')
 			const { hemisphereLight, ambientLight, directionalLight } = lights
@@ -368,54 +369,108 @@
 			this.DS= new DominoScene(this)
 
 			// add button
-			const texture = await this.load.texture('button')
-			texture.name = 'button'
+			const texturePlay = await this.load.texture('buttonPlay')
+			texturePlay.name = 'buttonPlay'
+			const textureReset = await this.load.texture('buttonReset')
+			textureReset.name = 'buttonReset'
+
+			const textureSound = await this.load.texture('buttonSound')
+			textureSound.name = 'buttonSound'
+
+
+
 
 			const width = window.innerWidth
 			const height = window.innerHeight
 
+			//-----------------------------------------------------
+			//Play
+			const buttonPlay = new FLAT.Button(texturePlay, { width: 43, height: 44 }, 2, 1, 0)
+			buttonPlay.setInteractive()
+			buttonPlay.setPosition(width / 20, height *7/ 8)
+			buttonPlay.setDepth(1)
+			buttonPlay.setScale(1)
 
-			const button = new FLAT.Button(texture, { width: 193, height: 71 }, 2, 1, 0)
-			button.setInteractive()
-			button.setPosition(width / 10, height *7/ 8)
-			button.setDepth(1)
-			button.setScale(1)
-
-			button.onInputOut = () => {
-			console.log('Button: onInputOut')
+			buttonPlay.onInputOut = () => {
+			console.log('buttonPlay: onInputOut')
 			}
-			button.onInputDown = () => {
-				console.log('Button: onInputDown')
+			buttonPlay.onInputDown = () => {
+				console.log('buttonPlay: onInputDown')
 				this.DS.backup();
 				this.DS.launch();
 			 
 		
 			}
-			button.onInputOver = () => {
+			buttonPlay.onInputOver = () => {
 					console.log('Button: onInputOver')
 			}
-			this.ui.scene.add(button)
-		  
-		  
-			const button2 = new FLAT.Button(texture, { width: 193, height: 71 }, 2, 1, 0)
-			button2.setInteractive()
-			button2.setPosition(width / 10, height *6/ 8)
-			button2.setDepth(1)
-			button2.setScale(1)
+			this.ui.scene.add(buttonPlay)
+			//-----------------------------------------------------
+			//Reset
+			const buttonReset = new FLAT.Button(textureReset, { width: 43, height: 44 }, 2, 1, 0)
+			buttonReset.setInteractive()
+			buttonReset.setPosition(width / 20, (height *7/ 8) - 50)
+			buttonReset.setDepth(1)
+			buttonReset.setScale(1)
 
-			button2.onInputOut = () => {
-				console.log('Button: onInputOut')
+			buttonReset.onInputOut = () => {
+				console.log('buttonReset: onInputOut')
 			}	
-			button2.onInputDown = () => {
-				console.log('Button: onInputDown')
+			buttonReset.onInputDown = () => {
+				console.log('buttonReset: onInputDown')
 				this.DS.destroy()
 				this.DS.restore()
 			}
-			button2.onInputOver = () => {
-				console.log('Button: onInputOver')
+			buttonReset.onInputOver = () => {
+				console.log('buttonReset: onInputOver')
 			}
-			this.ui.scene.add(button2)
-		  
+			this.ui.scene.add(buttonReset)
+			//-----------------------------------------------------
+			//Sound
+			const buttonSound = new FLAT.Button(textureSound, { width: 43, height: 44 }, 2, 1, 0)
+			buttonSound.setInteractive()
+			buttonSound.setPosition(width / 20, (height *7/ 8) - 100)
+			buttonSound.setDepth(1)
+			buttonSound.setScale(1)
+
+			buttonSound.onInputOut = () => {
+				console.log('buttonSound: onInputOut')
+			}	
+			buttonSound.onInputDown = () => {
+				console.log('buttonSound: onInputDown='+this.sound)
+				if(this.sound==false)
+					this.sound=true
+				else
+					this.sound=false
+				
+			}
+			buttonSound.onInputOver = () => {
+				console.log('buttonSound: onInputOver')
+			}
+			this.ui.scene.add(buttonSound)
+			
+			//-----------------------------------------------------
+			//Load
+			const buttonLoad = new FLAT.Button(textureSound, { width: 43, height: 44 }, 2, 1, 0)
+			buttonLoad.setInteractive()
+			buttonLoad.setPosition(width / 20, (height *7/ 8) - 150)
+			buttonLoad.setDepth(1)
+			buttonLoad.setScale(1)
+
+			buttonLoad.onInputOut = () => {
+				console.log('buttonLoad: onInputOut')
+			}	
+			buttonLoad.onInputDown = () => {
+				console.log('buttonLoad: onInputDown='+this.sound)
+				this.DS.save()
+				
+			}
+			buttonLoad.onInputOver = () => {
+				console.log('buttonLoad: onInputOver')
+			}
+			this.ui.scene.add(buttonLoad)
+			
+			
 			//-------------------------------scene
 			const x_origin = -20
 			this.AddGround()
