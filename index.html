@@ -26,6 +26,8 @@
 			await this.load.preload('face', '/assets/img/flat0.png')
 			await this.load.preload('side', '/assets/img/flat0.png')
 			await this.load.preload('wood', '/assets/img/wood3.jpg')
+			await this.load.preload('heart', '/assets/scene/heart.json')
+			await this.load.preload('diamond', '/assets/scene/diamond.json')
 			//await this.load.preload('wood_normal', '/assets/img/wood3_normal.jpg')
 			//await this.load.preload('wood_roughness', '/assets/img/wood3_roughness.jpg')
 			//console.log(this.load)
@@ -253,17 +255,7 @@
 			
 			
 			
-			/*
-			let heart = [
-				[0,0,0,0,0,0,0],
-				[0,0,1,0,1,0,0],
-				[0,1,1,1,1,1,0],
-				[0,1,1,1,1,1,0],
-				[0,0,1,1,1,0,0],
-				[0,0,0,1,0,0,0],
-				[0,0,0,0,0,0,0],
-				];
-			*/
+			
 			let heart = [
 				[0,0,0,0,0,0,0,0,0],
 				[0,0,1,1,0,1,1,0,0],
@@ -274,6 +266,19 @@
 				[0,0,0,0,0,0,0,0,0],
 				];
 			
+			
+			let diamond = [
+				[0,0,0,0,1,0,0,0,0],
+				[0,0,0,1,1,1,0,0,0],
+				[0,0,1,1,1,1,1,0,0],
+				[0,1,1,1,1,1,1,1,0],
+				[0,0,1,1,1,1,1,0,0],
+				[0,0,0,1,1,1,0,0,0],
+				[0,0,0,0,1,0,0,0,0],
+				];
+			
+			
+			
 			for (let i = 0; i < 7; i++) 
 			{
 				let fac=1.4*i
@@ -282,6 +287,7 @@
 				
 					//console.log("H("+i+","+j+")="+heart[i][j])
 					var c=0x5f5f5f
+					//if(diamond[i][j]==1)
 					if(heart[i][j]==1)
 						c=0xdc143c//0xff69b4
 					//this.DS.AddDomino(1.1+ (1.1*j)+x_origin, 1,fac+z_origin +7.0,-Math.PI/2,0xff69b4,c)
@@ -328,9 +334,12 @@
 			this.textureFace = await this.load.texture('face')
 			this.textureSide = await this.load.texture('side')
 			this.textureWood = await this.load.texture('wood')
+			
 			//this.textureWoodNormal = await this.load.texture('wood_normal')
 			//this.textureWoodRoughness = await this.load.texture('wood_roughness')
 			this.bridgeSVG =await this.load.file('bridge')
+			this.heart =await this.load.file('heart')
+			this.diamond =await this.load.file('diamond')
 				
 		
 			this.audio = document.getElementById("audio");
@@ -462,7 +471,9 @@
 			}	
 			buttonLoad.onInputDown = () => {
 				console.log('buttonLoad: onInputDown='+this.sound)
-				this.DS.save()
+				this.DS.save('coeur')
+				//this.DS.load(this.heart)
+				this.DS.load(this.diamond)
 				
 			}
 			buttonLoad.onInputOver = () => {

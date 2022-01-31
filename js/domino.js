@@ -678,9 +678,10 @@ class DominoScene{
 			this.listBalancator.push(Balancator.fromJson(this.base, serialize))
 		}
 	}
-	save(){
+	save(name){
 		this.backup()
 		var f=JSON.stringify({
+			name: name,
 			domino: this.listDominoBackup,
 			ball: this.listBallBackup,
 			rotator: this.listRotatorBackup,
@@ -690,7 +691,20 @@ class DominoScene{
 			})
 			console.log(f)
 	}
-	load(){
+	load(_json){
+			console.log('load')
+			var data = JSON.parse(_json); // Parsing the json string.
+			console.log(data)
+			console.log(data.name)
+			this.listDominoBackup=data.domino
+			this.listBallBackup=data.ball
+			this.listRotatorBackup=data.rotator
+			this.listBarBackup=data.bar
+			this.listBridgeBackup=data.bridge
+			this.listBalancatorBackup=data.balancator
+			this.destroy()
+			this.restore()
+			
 	}
 		
 		
