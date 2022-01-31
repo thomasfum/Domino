@@ -3,8 +3,9 @@
 //Domino
 //-------------------------------------------------------
 class Domino {
-	constructor(_base,_x,_y,_z, _angle,_colorFace1,_colorFace2,_colorSide) {
+	constructor(_base,_id,_x,_y,_z, _angle,_colorFace1,_colorFace2,_colorSide) {
  
+			this.id=_id
 			this.x=_x;
 			this.y=_y;
 			this.z=_z;
@@ -85,28 +86,40 @@ class Domino {
 			//----------------------------------
 			//this.box = _base.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { lambert: { color: _colorFace1 } })
 			//this.box = _base.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { custom: textureCube.materials } )
-			this.box = _base.add.box({ name:'dom',x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { custom: cubeMaterials } )
+			this.box = _base.add.box({ name:'dom_'+_id,x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { custom: cubeMaterials } )
 			this.box.rotation.set(0, _angle, 0)
 			_base.physics.add.existing(this.box)
 			
-			/*
+			
 			this.box.body.on.collision((otherObject, event) => {
-            if (otherObject.name !== 'ground') 
-				console.log(`Domino and ${otherObject.name}: ${event}`)
+				if(this.hurt==false)
+				{
+					if ((otherObject.name !== 'ground') && (otherObject.name !== 'Bridge') )
+					{
+						//console.log('Domino'+ this.id+' and ${otherObject.name}: ${event}')
+						//console.log('dom_'+ this.id+' and '+otherObject.name+': '+event)
+						this.hurt=true
+						_base.audio.play();
+					}
+				}
 			})
-			*/
+			
 		  
 	  
 			//return box1
 			
   }
-  
+	launch()
+	{
+		this.hurt=false;
+	}
 	destroy(_base)
 	{
 		_base.destroy(this.box);
 	}
 	toJson() {
 		return JSON.stringify({
+			id: this.id,
 			x: this.x,
 			y: this.y,
 			z: this.z,
@@ -121,7 +134,7 @@ class Domino {
 	{
 		//console.log(_json)
 		var data = JSON.parse(_json); // Parsing the json string.
-		return new Domino(_base,data.x, data.y, data.z, data.angle, data.colorFace1, data.colorFace2, data.colorFace3);
+		return new Domino(_base,data.id,data.x, data.y, data.z, data.angle, data.colorFace1, data.colorFace2, data.colorFace3);
 	}
 }
 //-------------------------------------------------------
@@ -138,9 +151,9 @@ class Ball {
 		const nbTorus=12
 		
 		//feet
-		this.f1=_base.physics.add.box({mass: 100, x:_x+((nbTorus-0)*0.4), y: _y/2,z:_z-2, height: _y,width: 0.5, depth: 0.5  }, 
+		this.f1=_base.physics.add.box({mass: 0, x:_x+((nbTorus-0)*0.4), y: _y/2,z:_z-2, height: _y,width: 0.5, depth: 0.5  }, 
 		{ lambert: { color: 'GoldenRod' } })
-		this.f2=_base.physics.add.box({mass: 100, x:_x+((nbTorus-0)*0.4), y: _y,z:_z-1.25, height: 0.5,width: 0.5, depth: 2  }, 
+		this.f2=_base.physics.add.box({mass: 0, x:_x+((nbTorus-0)*0.4), y: _y,z:_z-1.25, height: 0.5,width: 0.5, depth: 2  }, 
 		{ lambert: { color: 'GoldenRod' } })
 		
 		
@@ -158,8 +171,8 @@ class Ball {
 			)
 			if (i % 2 == 0) 
 				t2.rotateX(Math.PI / 2)
-			let t=_base.physics.add.existing(t2, { mass: i === nbTorus ? 0 : 1 })
-				console.log(t)
+			_base.physics.add.existing(t2, { mass: i === nbTorus ? 0 : 1 })
+				
 			this.listTorus.push(t2)
 			// ball
 			if (i === 2) 
@@ -177,8 +190,7 @@ class Ball {
 			}
 			
 		}
-		console.log(this.listTorus)
-			console.log('this.listTorus')
+		
 	}
 	launch(){
 		console.log('Launch!!!')
@@ -534,5 +546,163 @@ class DominoScene{
 	constructor(_base)
 	{
 		this.base= _base
+		this.listDomino=[];
+		this.listBall=[];
+		this.listRotator=[];
+		this.listBar=[];
+		this.listBridge=[];
+		this.listBalancator=[];
+		
+		this.listDominoBackup=[];
+		this.listBallBackup=[];
+		this.listRotatorBackup=[];
+		this.listBarBackup=[];
+		this.listBridgeBackup=[];
+		this.listBalancatorBackup=[];
+	}
+	
+	backup(){
+		//empty backup
+			while(this.listDominoBackup.length > 0) {
+				this.listDominoBackup.pop();
+			}
+			while(this.listBallBackup.length > 0) {
+				this.listBallBackup.pop();
+			}
+			while(this.listRotatorBackup.length > 0) {
+				this.listRotatorBackup.pop();
+			}
+			while(this.listBarBackup.length > 0) {
+				this.listBarBackup.pop();
+			}
+			while(this.listBridgeBackup.length > 0) {
+				this.listBridgeBackup.pop();
+			}
+			while(this.listBalancatorBackup.length > 0) {
+				this.listBalancatorBackup.pop();
+			}
+			
+			//Backup
+			for (const o of this.listDomino) {
+				this.listDominoBackup.push(o.toJson())
+			}
+			for (const o of this.listBall) {
+				this.listBallBackup.push(o.toJson())
+			}
+			for (const o of this.listRotator) {
+				this.listRotatorBackup.push(o.toJson())
+			}
+			for (const o of this.listBar) {
+				this.listBarBackup.push(o.toJson())
+			}
+			for (const o of this.listBridge) {
+				this.listBridgeBackup.push(o.toJson())
+			}
+			for (const o of this.listBalancator) {
+				this.listBalancatorBackup.push(o.toJson())
+			}
+	}
+	launch(){
+		//Launch balls
+		for (const o of this.listBall) {
+			o.launch()
+		}
+		
+		for (const o of this.listDomino) {
+			o.launch()
+		}
+		
+	}
+	
+	destroy(){
+		console.log('---------------destroy');
+		
+			for (const o of this.listDomino) {
+				o.destroy(this.base)
+			}
+			for (const o of this.listBall) {
+				o.destroy(this.base)
+			}
+			for (const o of this.listRotator) {
+				o.destroy(this.base)
+			}
+			for (const o of this.listBar) {
+				o.destroy(this.base)
+			}
+			for (const o of this.listBridge) {
+				o.destroy(this.base)
+			}
+			for (const o of this.listBalancator) {
+				o.destroy(this.base)
+			}
+			console.log('---------------destroy Done');
+			while(this.listDomino.length > 0) {
+				this.listDomino.pop();
+			}
+			while(this.listBall.length > 0) {
+				this.listBall.pop();
+			}
+			while(this.listRotator.length > 0) {
+				this.listRotator.pop();
+			}
+			while(this.listBar.length > 0) {
+				this.listBar.pop();
+			}
+			while(this.listBridge.length > 0) {
+				this.listBridge.pop();
+			}
+			while(this.listBalancator.length > 0) {
+				this.listBalancator.pop();
+			}
+			
+	}
+	restore(){
+			console.log('---------------Restore');
+			for (const serialize of this.listDominoBackup) {
+				this.listDomino.push(Domino.fromJson(this.base, serialize))
+			}
+			for (const serialize of this.listBallBackup) {
+				this.listBall.push(Ball.fromJson(this.base, serialize))
+			}
+			for (const serialize of this.listRotatorBackup) {
+				this.listRotator.push(Rotator.fromJson(this.base, serialize))
+			}
+			for (const serialize of this.listBarBackup) {
+				this.listBar.push(Bar.fromJson(this.base, serialize))
+			}
+			for (const serialize of this.listBridgeBackup) {
+				this.listBridge.push(Bridge.fromJson(this.base, serialize))
+			}
+			for (const serialize of this.listBalancatorBackup) {
+				this.listBalancator.push(Balancator.fromJson(this.base, serialize))
+			}
+		}
+		
+		
+	AddDomino(x,y,z, angle,colorFace1,colorFace2,colorSide) 
+	{
+		const o=new Domino(this.base,this.listDomino.length,x,y,z, angle,colorFace1,colorFace2,colorSide)
+		this.listDomino.push(o);
+		return o
+	}
+	AddBall(x, y,z)
+	{
+		this.listBall.push(new Ball(this.base,x, y,z));
+	}
+	AddBar(x, y,z,angle,color,size)
+	{
+		this.listBar.push(new Bar(this.base,x, y,z,angle,color,size));
+	}
+	AddBridge(x, y,z)
+	{
+		this.listBridge.push(new Bridge(this.base,x, y,z));
+	}	
+	AddRotator(x, y,z)
+	{
+		this.listRotator.push(new Rotator(this.base,x, y,z));
+	}
+	AddBalancator(x, y,z)
+	{
+		this.listBalancator.push(new Balancator(this.base,x, y,z));
 	}
 }
