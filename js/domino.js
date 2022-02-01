@@ -1,3 +1,10 @@
+//-------------------------
+//TODO
+//
+// - Orbital control init
+// - Display loaded scene Name
+// - place object with mouse
+// - save/load from server
 
 //-------------------------------------------------------
 //Domino
@@ -96,13 +103,14 @@ class Domino {
 				{
 					if ((otherObject.name !== 'ground') && (otherObject.name !== 'Bridge') )
 					{
-						//console.log('Domino'+ this.id+' and ${otherObject.name}: ${event}')
 						//console.log('dom_'+ this.id+' and '+otherObject.name+': '+event)
 						this.hurt=true
 						if(_base.sound==true)
 							_base.audio.play();
 					}
+					
 				}
+				
 			})
 			
 		  
@@ -616,7 +624,7 @@ class DominoScene{
 	}
 	
 	destroy(){
-		console.log('---------------destroy');
+		//console.log('---------------destroy');
 		
 		for (const o of this.listDomino) {
 			o.destroy(this.base)
@@ -636,7 +644,7 @@ class DominoScene{
 		for (const o of this.listBalancator) {
 			o.destroy(this.base)
 		}
-		console.log('---------------destroy Done');
+		//console.log('---------------destroy Done');
 		while(this.listDomino.length > 0) {
 			this.listDomino.pop();
 		}
@@ -658,7 +666,7 @@ class DominoScene{
 			
 	}
 	restore(){
-		console.log('---------------Restore');
+		//console.log('---------------Restore');
 		for (const serialize of this.listDominoBackup) {
 			this.listDomino.push(Domino.fromJson(this.base, serialize))
 		}
@@ -692,10 +700,10 @@ class DominoScene{
 			console.log(f)
 	}
 	load(_json){
-			console.log('load')
+			//console.log('load')
 			var data = JSON.parse(_json); // Parsing the json string.
-			console.log(data)
-			console.log(data.name)
+			//console.log(data)
+			//console.log(data.name)
 			this.listDominoBackup=data.domino
 			this.listBallBackup=data.ball
 			this.listRotatorBackup=data.rotator
@@ -704,7 +712,7 @@ class DominoScene{
 			this.listBalancatorBackup=data.balancator
 			this.destroy()
 			this.restore()
-			
+			return data.name
 	}
 		
 		

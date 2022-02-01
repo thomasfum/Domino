@@ -23,6 +23,10 @@
 			await this.load.preload('buttonPlay', '/assets/button/play.png')
 			await this.load.preload('buttonReset', '/assets/button/reset.png')
 			await this.load.preload('buttonSound', '/assets/button/sound.png')
+			await this.load.preload('buttonLoad', '/assets/button/load.png')
+			
+			
+			
 			await this.load.preload('face', '/assets/img/flat0.png')
 			await this.load.preload('side', '/assets/img/flat0.png')
 			await this.load.preload('wood', '/assets/img/wood3.jpg')
@@ -154,103 +158,113 @@
 	
 		AddDominos(x_origin,y_origin,z_origin){
 			
-
+			//let color1=0xff69b4//pink
+			let color1=0x00ff55
+			
+			
+			this.DS.AddBall(x_origin-6, 0,-2)
+			this.DS.AddBar(4 +1.7+ x_origin, 1,4,-Math.PI/2,color1,9)
+			this.DS.AddBridge(x_origin+20,0,-2)
+			this.DS.AddRotator(x_origin+40,0,+2)
+			this.DS.AddBalancator(x_origin+5.5,0,-2)
+			
+			
 			//depart
-			const Start = this.DS.AddDomino(1 + x_origin, 1,z_origin,0,0xff69b4)
+			const Start = this.DS.AddDomino(1 + x_origin, 1,z_origin,0,color1)
 			//Start.box.body.applyForceX(3)
 			
-			this.DS.AddDomino(3 + x_origin, 1,z_origin,0,0xff69b4)
-			this.DS.AddDomino(5 + x_origin, 1,z_origin,0,0xff69b4)
-			this.DS.AddDomino(7 + x_origin, 1,z_origin,0,0xff69b4)
-			this.DS.AddDomino(9 + x_origin, 1,z_origin,0,0xff69b4)
-			this.DS.AddDomino(10.5 + x_origin, 1,z_origin,0,0xff69b4)
+			this.DS.AddDomino(3 + x_origin, 1,z_origin,0,color1)
+			this.DS.AddDomino(5 + x_origin, 1,z_origin,0,color1)
+			this.DS.AddDomino(7 + x_origin, 1,z_origin,0,color1)
+			this.DS.AddDomino(9 + x_origin, 1,z_origin,0,color1)
+			this.DS.AddDomino(10.5 + x_origin, 1,z_origin,0,color1)
 			//escalier
-			this.DS.AddDomino(11.75 + x_origin, 3,z_origin,0,0xff69b4)
-			this.DS.AddDomino(13 + x_origin, 4,z_origin,0,0xff69b4)
-			this.DS.AddDomino(14.25 + x_origin, 5,z_origin,0,0xff69b4)
-			this.DS.AddDomino(15.5 + x_origin, 6,z_origin,0,0xff69b4)
-			this.DS.AddDomino(16.75 + x_origin, 7.2,z_origin,0,0xff69b4)
-			this.DS.AddDomino(18.5 + x_origin, 7.2,z_origin,0,0xff69b4)
-			this.DS.AddDomino(21.10 + x_origin, 7.5,z_origin-0.2,0,0xff69b4)
+			this.DS.AddDomino(11.75 + x_origin, 3,z_origin,0,color1)
+			this.DS.AddDomino(13 + x_origin, 4,z_origin,0,color1)
+			this.DS.AddDomino(14.25 + x_origin, 5,z_origin,0,color1)
+			this.DS.AddDomino(15.5 + x_origin, 6,z_origin,0,color1)
+			this.DS.AddDomino(16.75 + x_origin, 7.2,z_origin,0,color1)
+			this.DS.AddDomino(18.5 + x_origin, 7.2,z_origin,0,color1)
+			this.DS.AddDomino(21.10 + x_origin, 7.5,z_origin-0.2,0,color1)
 
 			//triangle rang 1
-			this.DS.AddDomino(30.0 + x_origin, 1,z_origin - 2.5,0,0xff69b4)
-			this.DS.AddDomino(30.0 + x_origin, 1,z_origin - 0.5,0,0xff69b4)
-			this.DS.AddDomino(30.0 + x_origin, 1,z_origin + 1.5,0,0xff69b4)
-			this.DS.AddDomino(30.0 + x_origin, 1,z_origin + 3.5,0,0xff69b4)
+			this.DS.AddDomino(30.0 + x_origin, 1,z_origin - 2.5,0,color1)
+			this.DS.AddDomino(30.0 + x_origin, 1,z_origin - 0.5,0,color1)
+			this.DS.AddDomino(30.0 + x_origin, 1,z_origin + 1.5,0,color1)
+			this.DS.AddDomino(30.0 + x_origin, 1,z_origin + 3.5,0,color1)
 			//triangle rang 2
-			this.DS.AddDomino(31.75 + x_origin, 1,z_origin - 2.0,0,0xff69b4)
-			this.DS.AddDomino(31.75 + x_origin, 1,z_origin - 0.5,0,0xff69b4)
-			this.DS.AddDomino(31.75 + x_origin, 1,z_origin + 1.0,0,0xff69b4)
-			this.DS.AddDomino(31.75 + x_origin, 1,z_origin + 2.5,0,0xff69b4)
+			this.DS.AddDomino(31.75 + x_origin, 1,z_origin - 2.0,0,color1)
+			this.DS.AddDomino(31.75 + x_origin, 1,z_origin - 0.5,0,color1)
+			this.DS.AddDomino(31.75 + x_origin, 1,z_origin + 1.0,0,color1)
+			this.DS.AddDomino(31.75 + x_origin, 1,z_origin + 2.5,0,color1)
 			//triangle rang 3
-			this.DS.AddDomino(33.5 + x_origin, 1,z_origin + 1.8,0,0xff69b4)
-			this.DS.AddDomino(33.5 + x_origin, 1,z_origin + 0.2,0,0xff69b4)
-			this.DS.AddDomino(33.5 + x_origin, 1,z_origin - 1.2,0,0xff69b4)
+			this.DS.AddDomino(33.5 + x_origin, 1,z_origin + 1.8,0,color1)
+			this.DS.AddDomino(33.5 + x_origin, 1,z_origin + 0.2,0,color1)
+			this.DS.AddDomino(33.5 + x_origin, 1,z_origin - 1.2,0,color1)
 			//triangle rang 4
-			this.DS.AddDomino(34.5 + x_origin, 1,z_origin + 1.6,0,0xff69b4)
-			this.DS.AddDomino(34.5 + x_origin, 1,z_origin + 0.4,0,0xff69b4)
-			this.DS.AddDomino(34.5 + x_origin, 1,z_origin - 0.8,0,0xff69b4)
+			this.DS.AddDomino(34.5 + x_origin, 1,z_origin + 1.6,0,color1)
+			this.DS.AddDomino(34.5 + x_origin, 1,z_origin + 0.4,0,color1)
+			this.DS.AddDomino(34.5 + x_origin, 1,z_origin - 0.8,0,color1)
 			//triangle rang 5
-			this.DS.AddDomino(36.0 + x_origin, 1,z_origin - 0.2,0,0xff69b4)
-			this.DS.AddDomino(36.0 + x_origin, 1,z_origin + 1.0,0,0xff69b4)
+			this.DS.AddDomino(36.0 + x_origin, 1,z_origin - 0.2,0,color1)
+			this.DS.AddDomino(36.0 + x_origin, 1,z_origin + 1.0,0,color1)
 			//triangle rang 6
-			this.DS.AddDomino(38.0 + x_origin, 1,z_origin - 0.2,0,0xff69b4)
-			this.DS.AddDomino(38.0 + x_origin, 1,z_origin + 1.0,0,0xff69b4)
+			this.DS.AddDomino(38.0 + x_origin, 1,z_origin - 0.2,0,color1)
+			this.DS.AddDomino(38.0 + x_origin, 1,z_origin + 1.0,0,color1)
 			
 			//ligne devant le pont
 			
-			this.DS.AddDomino(38.0 + x_origin, 1,z_origin + 10.5,Math.PI,0xff69b4)
-			this.DS.AddDomino(36.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4)
-			this.DS.AddDomino(34.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4)
-			this.DS.AddDomino(32.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4)
-			this.DS.AddDomino(30.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4)
-			this.DS.AddDomino(28.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4)
-			this.DS.AddDomino(26.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4)
-			this.DS.AddDomino(24.0 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4)
+			this.DS.AddDomino(38.0 + x_origin, 1,z_origin + 10.5,Math.PI,color1)
+			this.DS.AddDomino(36.0 + x_origin, 1,z_origin + 10,Math.PI,color1)
+			this.DS.AddDomino(34.0 + x_origin, 1,z_origin + 10,Math.PI,color1)
+			this.DS.AddDomino(32.0 + x_origin, 1,z_origin + 10,Math.PI,color1)
+			this.DS.AddDomino(30.0 + x_origin, 1,z_origin + 10,Math.PI,color1)
+			this.DS.AddDomino(28.0 + x_origin, 1,z_origin + 10,Math.PI,color1)
+			this.DS.AddDomino(26.0 + x_origin, 1,z_origin + 10,Math.PI,color1)
+			this.DS.AddDomino(24.0 + x_origin, 1,z_origin + 10,Math.PI,color1)
 		
-			this.DS.AddDomino(22.5 + x_origin, 1,z_origin + 10,Math.PI,0xff69b4)
+			this.DS.AddDomino(22.5 + x_origin, 1,z_origin + 10,Math.PI,color1)
 			//courbe vers pont
-			this.DS.AddDomino(21.3 + x_origin, 1,z_origin + 9.4 ,Math.PI-(Math.PI / 6),0xff69b4)
-			this.DS.AddDomino(20.3 + x_origin, 1,z_origin + 8.5 ,Math.PI-(Math.PI / 3),0xff69b4)
+			this.DS.AddDomino(21.3 + x_origin, 1,z_origin + 9.4 ,Math.PI-(Math.PI / 6),color1)
+			this.DS.AddDomino(20.3 + x_origin, 1,z_origin + 8.5 ,Math.PI-(Math.PI / 3),color1)
 
 			//sous le pont	
-			const bridgeStart=this.DS.AddDomino(20.0 + x_origin, 1,z_origin + 7,Math.PI/2,0xff69b4)
+			const bridgeStart=this.DS.AddDomino(20.0 + x_origin, 1,z_origin + 7,Math.PI/2,color1)
 			
-			this.DS.AddDomino(20.0 + x_origin, 1,z_origin + 5.5,Math.PI/2,0xff69b4)
-			this.DS.AddDomino(20.0 + x_origin, 1,z_origin + 3.5,Math.PI/2,0xff69b4)
-			this.DS.AddDomino(20.0 + x_origin, 1,z_origin + 2,Math.PI/2,0xff69b4)
-			this.DS.AddDomino(20.0 + x_origin, 1,z_origin + 0,Math.PI/2,0xff69b4)
-			this.DS.AddDomino(20.0 + x_origin, 1,z_origin -2,Math.PI/2,0xff69b4)
-			this.DS.AddDomino(20.0 + x_origin, 1,z_origin -4,Math.PI/2,0xff69b4)
+			this.DS.AddDomino(20.0 + x_origin, 1,z_origin + 5.5,Math.PI/2,color1)
+			this.DS.AddDomino(20.0 + x_origin, 1,z_origin + 3.5,Math.PI/2,color1)
+			this.DS.AddDomino(20.0 + x_origin, 1,z_origin + 2,Math.PI/2,color1)
+			this.DS.AddDomino(20.0 + x_origin, 1,z_origin + 0,Math.PI/2,color1)
+			this.DS.AddDomino(20.0 + x_origin, 1,z_origin -2,Math.PI/2,color1)
+			this.DS.AddDomino(20.0 + x_origin, 1,z_origin -4,Math.PI/2,color1)
 			
 			//courbe apres le  pont
-			this.DS.AddDomino(19.50 + x_origin, 1,z_origin -5.5,Math.PI/2+Math.PI/6.0,0xff69b4)
-			this.DS.AddDomino(18.75 + x_origin, 1,z_origin -7,Math.PI/2+Math.PI/3.0,0xff69b4)
+			this.DS.AddDomino(19.50 + x_origin, 1,z_origin -5.5,Math.PI/2+Math.PI/6.0,color1)
+			this.DS.AddDomino(18.75 + x_origin, 1,z_origin -7,Math.PI/2+Math.PI/3.0,color1)
 		
 			//ligne droite derriere le pont
-			this.DS.AddDomino(17.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4)
-			this.DS.AddDomino(16.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4)
-			this.DS.AddDomino(14.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4)
-			this.DS.AddDomino(13.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4)
-			this.DS.AddDomino(11.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4)
-			this.DS.AddDomino(10.0 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4)
-			this.DS.AddDomino(8.5 + x_origin, 1,z_origin -7.5,Math.PI,0xff69b4)
-			//this.DS.AddDomino(7.0 + x_origin, 1,z_origin -7.5,0,0xff69b4)
+			this.DS.AddDomino(17.5 + x_origin, 1,z_origin -7.5,Math.PI,color1)
+			this.DS.AddDomino(16.0 + x_origin, 1,z_origin -7.5,Math.PI,color1)
+			this.DS.AddDomino(14.5 + x_origin, 1,z_origin -7.5,Math.PI,color1)
+			this.DS.AddDomino(13.0 + x_origin, 1,z_origin -7.5,Math.PI,color1)
+			this.DS.AddDomino(11.5 + x_origin, 1,z_origin -7.5,Math.PI,color1)
+			this.DS.AddDomino(10.0 + x_origin, 1,z_origin -7.5,Math.PI,color1)
+			this.DS.AddDomino(8.5 + x_origin, 1,z_origin -7.5,Math.PI,color1)
+			//this.DS.AddDomino(7.0 + x_origin, 1,z_origin -7.5,0,color1)
 			
 			//rotation avant balancator
-			this.DS.AddDomino(5.8 +1.5+ x_origin, 1,z_origin -7,Math.PI+Math.PI/6.0,0xff69b4)
-			this.DS.AddDomino(4.7 +1.5+ x_origin, 1,z_origin -6.2,Math.PI+Math.PI/3.0,0xff69b4)
+			this.DS.AddDomino(5.8 +1.5+ x_origin, 1,z_origin -7,Math.PI+Math.PI/6.0,color1)
+			this.DS.AddDomino(4.7 +1.5+ x_origin, 1,z_origin -6.2,Math.PI+Math.PI/3.0,color1)
 			
 			//ligne droite avant balancator
-			this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin -5,-Math.PI/2,0xff69b4)
-			this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin -4,-Math.PI/2,0xff69b4)
-			this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin -3.0,-Math.PI/2,0xff69b4)
+			this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin -5,-Math.PI/2,color1)
+			this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin -4,-Math.PI/2,color1)
+			this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin -3.0,-Math.PI/2,color1)
 			
 			//apres la balancoire
-			const StartPicture=this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin +2.0,-Math.PI/2,0xff69b4)
-			this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin +3.5,-Math.PI/2,0xff69b4)
-			this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin +5.0,-Math.PI/2,0xff69b4)
+			const StartPicture=this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin +2.0,-Math.PI/2,color1)
+			this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin +3.5,-Math.PI/2,color1)
+			this.DS.AddDomino(4 +1.5+ x_origin, 1,z_origin +5.0,-Math.PI/2,color1)
 						
 			
 			
@@ -287,8 +301,8 @@
 				
 					//console.log("H("+i+","+j+")="+heart[i][j])
 					var c=0x5f5f5f
-					//if(diamond[i][j]==1)
-					if(heart[i][j]==1)
+					if(diamond[i][j]==1)
+					//if(heart[i][j]==1)
 						c=0xdc143c//0xff69b4
 					//this.DS.AddDomino(1.1+ (1.1*j)+x_origin, 1,fac+z_origin +7.0,-Math.PI/2,0xff69b4,c)
 					this.DS.AddDomino(1.1+ (1.1*j)+x_origin, 1,fac+z_origin +7.0,-Math.PI/2,0xdc143c,c)
@@ -327,8 +341,61 @@
 		}
 		
 		
+		 makeTextSprite( message, parameters )
+    {
+        if ( parameters === undefined ) parameters = {};
+        var fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "Courier New";
+        var fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 18;
+        var borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 4;
+        var borderColor = parameters.hasOwnProperty("borderColor") ?parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
+        var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?parameters["backgroundColor"] : { r:0, g:0, b:255, a:1.0 };
+        var textColor = parameters.hasOwnProperty("textColor") ?parameters["textColor"] : { r:0, g:0, b:0, a:1.0 };
+
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        context.font = "Bold " + fontsize + "px " + fontface;
+        var metrics = context.measureText( message );
+        var textWidth = metrics.width;
+
+        context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," + backgroundColor.b + "," + backgroundColor.a + ")";
+        context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," + borderColor.b + "," + borderColor.a + ")";
+        context.fillStyle = "rgba("+textColor.r+", "+textColor.g+", "+textColor.b+", 1.0)";
+        context.fillText( message, borderThickness, fontsize + borderThickness);
+
+        var texture = new THREE.Texture(canvas) 
+        texture.needsUpdate = true;
+        var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false } );
+        var sprite = new THREE.Sprite( spriteMaterial );
+        sprite.scale.set(0.5 * fontsize, 0.25 * fontsize, 0.75 * fontsize);
+        return sprite;  
+    }
+	
+		setText(txt)
+		{
+		
+		
+				
+		const width = window.innerWidth
+		const height = window.innerHeight
+			// create text texture
+          let textureTXT = new FLAT.TextTexture(txt/*,{ fontsize: 44, textColor: {r:255, g:255, b:255, a:1.0}}*/)
+		  console.log('FLAT')
+		  console.log(FLAT.TextTexture)
+
+          // texture in 2d space
+          this.sprite2dTXT = new FLAT.TextSprite(textureTXT )
+		  let scale=0.4;
+		  this.sprite2dTXT.setScale(scale);
+          this.aaa=this.ui.scene.add(this.sprite2dTXT)
+          this.sprite2dTXT.setPosition(textureTXT.width*scale / 2 + 90, height - textureTXT.height*scale / 2 - 60)
+
+		}
+		
 		async create() {
 
+			this.activeScene=0
+			this.maxScene=1
+			
 			this.renderer.setPixelRatio(window.devicePixelRatio)
 
 			this.textureFace = await this.load.texture('face')
@@ -382,15 +449,22 @@
 			texturePlay.name = 'buttonPlay'
 			const textureReset = await this.load.texture('buttonReset')
 			textureReset.name = 'buttonReset'
-
 			const textureSound = await this.load.texture('buttonSound')
 			textureSound.name = 'buttonSound'
+			const textureLoad = await this.load.texture('buttonLoad')
+			textureSound.name = 'buttonLoad'
+
 
 
 
 
 			const width = window.innerWidth
 			const height = window.innerHeight
+
+			this.setText('_')
+			
+			
+
 
 			//-----------------------------------------------------
 			//Play
@@ -407,8 +481,6 @@
 				console.log('buttonPlay: onInputDown')
 				this.DS.backup();
 				this.DS.launch();
-			 
-		
 			}
 			buttonPlay.onInputOver = () => {
 					console.log('Button: onInputOver')
@@ -460,7 +532,7 @@
 			
 			//-----------------------------------------------------
 			//Load
-			const buttonLoad = new FLAT.Button(textureSound, { width: 43, height: 44 }, 2, 1, 0)
+			const buttonLoad = new FLAT.Button(textureLoad, { width: 43, height: 44 }, 2, 1, 0)
 			buttonLoad.setInteractive()
 			buttonLoad.setPosition(width / 20, (height *7/ 8) - 150)
 			buttonLoad.setDepth(1)
@@ -471,9 +543,19 @@
 			}	
 			buttonLoad.onInputDown = () => {
 				console.log('buttonLoad: onInputDown='+this.sound)
-				this.DS.save('coeur')
-				//this.DS.load(this.heart)
-				this.DS.load(this.diamond)
+				this.DS.save('TBD')
+				var name=''
+				this.activeScene=this.activeScene+1
+				if(this.activeScene>this.maxScene)
+					this.activeScene=0
+			
+				if(this.activeScene==0)
+					name=this.DS.load(this.diamond)
+				if(this.activeScene==1)
+					name=this.DS.load(this.heart)
+				console.log('this.activeScene='+name)
+				this.sprite2dTXT.setText(name)
+				
 				
 			}
 			buttonLoad.onInputOver = () => {
@@ -483,15 +565,10 @@
 			
 			
 			//-------------------------------scene
-			const x_origin = -20
 			this.AddGround()
-			this.AddDominos(x_origin,0,-2);
+			this.AddDominos(-20,0,-2);
 			
-			this.DS.AddBall(x_origin-6, 0,-2)
-			this.DS.AddBar(4 +1.7+ x_origin, 1,4,-Math.PI/2,0xff69b4,9)
-			this.DS.AddBridge(x_origin+20,0,-2)
-			this.DS.AddRotator(x_origin+40,0,+2)
-			this.DS.AddBalancator(x_origin+5.5,0,-2)
+			
         }
 
         preRender() {
