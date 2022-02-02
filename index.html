@@ -10,6 +10,7 @@
     <title>Domino</title>
 	<script src="/js/domino.js"></script>
     <script src="/lib/enable3d/enable3d.framework.0.25.0.min.js"></script>
+	 	 
 	    <audio id="audio" src="assets/audio/toc4.mp3"></audio>
   </head>
 
@@ -17,9 +18,31 @@
     <script>
 	
 		const { Project, Scene3D, THREE, FLAT,PhysicsLoader } = ENABLE3D
+		var MyGame;
+		const pointer = new THREE.Vector2();
 
+		function onPointerMove( event ) {
+
+			// calculate pointer position in normalized device coordinates
+			// (-1 to +1) for both components
+
+			pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+			pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+		}
+		
 		class MainScene extends Scene3D {
-			async preload() {
+		
+		constructor() {
+          super({ key: 'MainScene' })
+        }
+		 init() {
+        MyGame=this;
+         
+        }
+		
+		
+		async preload() {
 			await this.load.preload('bridge', '/assets/svg/bridge6.svg')
 			await this.load.preload('buttonPlay', '/assets/button/play.png')
 			await this.load.preload('buttonReset', '/assets/button/reset.png')
@@ -392,6 +415,39 @@
 
 		}
 		
+		StarDomino(){
+			//raycast
+		
+			const raycaster = new THREE.Raycaster();
+			
+			// update the picking ray with the camera and pointer position
+			raycaster.setFromCamera( pointer, this.camera );
+
+			// calculate objects intersecting the picking ray
+			const intersects = raycaster.intersectObjects( this.scene.children );
+			
+			console.log(intersects)
+				if(intersects.length>0 && intersects[ 0 ].object.name=='ground')
+				{
+					this.currentDomino=new Domino(this,-1,intersects[ 0 ].point.x+0.5, 1, intersects[ 0 ].point.z, 0, 0xff69b4);		
+					//intersects[ i ].object.material.color.set( 0xff0000 );
+					
+				}
+			
+/*
+			for ( let i = 0; i < intersects.length; i ++ ) {
+				console.log(intersects[ i ])
+				//console.log(intersects[ i ].object.name)
+				if(intersects[ i ].object.name=='ground')
+				{
+					this.currentDomino=new Domino(this,-1,intersects[ i ].point.x+0.5, 1, intersects[ i ].point.z, 0, 0xff69b4);		
+					//intersects[ i ].object.material.color.set( 0xff0000 );
+					}
+				}
+				*/
+		}
+	
+		
 		async create() {
 
 			this.activeScene=0
@@ -476,8 +532,27 @@
 			const height = window.innerHeight
 
 			this.setText('_')
-			
-			
+			window.addEventListener( 'pointermove', onPointerMove );
+	
+		   window.addEventListener('keydown', 
+		   
+		   
+		   function(e) {
+			console.log("key:"+e.keyCode)
+			console.log(	e)
+			switch(e.keyCode) {
+				case 68:
+				//MyGame.currentDomino=new Domino(MyGame,-2,5, 5, 5, 0, 0xff69b4);
+				MyGame.StarDomino();
+				break;
+				case 37: case 38: case 39: case 40:
+				case 32: e.preventDefault(); break;
+				default: break;
+			}
+		}, false);
+
+		//console.log('this')
+		//console.log(this)
 
 
 			//-----------------------------------------------------
@@ -599,10 +674,10 @@
       }
 
       // if you do not use physics, just do not use the PhysicLoader
-      PhysicsLoader(
+     PhysicsLoader(
         '/lib/ammo/kripken',
         () =>
-          new Project({
+            new Project({
             anisotropy: 1, // https://threejs.org/docs/#api/en/textures/Texture.anisotropy
             antialias: true, // false by default
 			
