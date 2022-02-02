@@ -15,6 +15,7 @@
 
   <body>
     <script>
+	
 		const { Project, Scene3D, THREE, FLAT,PhysicsLoader } = ENABLE3D
 
 		class MainScene extends Scene3D {
@@ -413,8 +414,19 @@
 		
 				
 			const { camera, ground, lights, orbitControls } = await this.warpSpeed('-ground')
+			//const { camera, ground, lights } = await this.warpSpeed('-ground -orbitControls')
 			const { hemisphereLight, ambientLight, directionalLight } = lights
 
+
+			//const controls = new THREE.OrbitControls( camera, this.renderer.domElement );
+
+			//if (features.includes('orbitControls')) {
+                // for phaser
+                // this.root is the phaser scene (scene3D)
+                // this.root.scale.parent instead of this.renderer.domElement
+                //const orbitControlsjj = new .OrbitControls(camera, document.getElementById('enable3d-phaser-canvas') || this.renderer.domElement);
+               // Features = Object.assign({ orbitControls }, Features);
+            //}
 			directionalLight.shadow.camera.bottom=-25
 			directionalLight.shadow.camera.top=25
 			directionalLight.shadow.camera.left=-25
@@ -427,7 +439,9 @@
 						
 			// position camera
 			this.camera.position.set(0, 40, 50)
-			//this.camera.lookAt(0, 8, 0)
+			this.camera.lookAt(0, 5, 0)
+			orbitControls.target.set(0, 5, 0)
+			orbitControls.zoomSpeed=0.5
 
 
 			// Initialize the flat elements
@@ -579,9 +593,9 @@
           FLAT.postRender(this.renderer, this.ui)
         }
 		
-			update() 
-			{
-			}
+		update() 
+		{
+		}
       }
 
       // if you do not use physics, just do not use the PhysicLoader

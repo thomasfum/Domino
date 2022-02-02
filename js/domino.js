@@ -1,8 +1,6 @@
 //-------------------------
 //TODO
 //
-// - Orbital control init
-// - Display loaded scene Name
 // - place object with mouse
 // - save/load from server
 
