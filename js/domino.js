@@ -93,7 +93,7 @@ class Domino {
 			//this.box = _base.add.box({ x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { custom: textureCube.materials } )
 			this.box = _base.add.box({ name:'dom_'+_id,x: _x, y: _y,z:_z,height: 3,width: 0.4, depth: 1  }, { custom: cubeMaterials } )
 			this.box.rotation.set(0, _angle, 0)
-			_base.physics.add.existing(this.box)
+			_base.physics.add.existing(this.box, { mass: 10/*, collisionFlags: 2 */})
 			
 			
 			this.box.body.on.collision((otherObject, event) => {
@@ -115,6 +115,21 @@ class Domino {
 	  
 			//return box1
 			
+  }
+  
+  setposition(_x,_y,_z)
+  {
+	 // console.log('move:'+_x)
+	  this.box.body.setCollisionFlags(2)
+	  this.box.position.set(_x, _y, _z)
+	  this.x=_x;
+			this.y=_y;
+			this.z=_z;
+			 this.box.body.needUpdate = true
+  }
+  fixIt()
+  {
+	  this.box.body.setCollisionFlags(0)
   }
 	launch()
 	{
@@ -269,7 +284,7 @@ class Rotator {
 			   },{ lambert: { color: 'GoldenRod' } })
 				
 				
-			this.arm = _base.physics.add.box({name: 'Rotator', mass: 2,x:_x, y: _y+1.75,z:_z, height:0.5,width: 0.5, depth: 14  }, 
+			this.arm = _base.physics.add.box({name: 'Rotator', mass: 15,x:_x, y: _y+1.75,z:_z, height:0.5,width: 0.5, depth: 14  }, 
 				{ lambert: { color: 'GoldenRod' } })
 			
 			
@@ -337,7 +352,7 @@ class Bar {
 		
 		this.box1 = _base.add.box({name: 'Bar', x: _x, y: _y,z:_z,height: 2,width: 0.4, depth: _size  }, { lambert: { color: _color } })
 		this.box1.rotation.set(0, _angle, 0)
-		this.box=_base.physics.add.existing(this.box1)
+		this.box=_base.physics.add.existing(this.box1, { mass: 60/*, collisionFlags: 2 */})
 		
 		
 		
@@ -720,6 +735,13 @@ class DominoScene{
 		this.listDomino.push(o);
 		return o
 	}
+	
+	AddDominoObj(o)
+	{
+		this.listDomino.push(o);
+		return o
+	}
+	
 	AddBall(x, y,z)
 	{
 		this.listBall.push(new Ball(this.base,x, y,z));

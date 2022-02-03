@@ -414,7 +414,14 @@
           this.sprite2dTXT.setPosition(textureTXT.width*scale / 2 + 90, height - textureTXT.height*scale / 2 - 60)
 
 		}
+		FixDomino()
+		{
+			
+			this.currentDomino.fixIt();
+			this.DS.AddDominoObj(this.currentDomino)
+			this.currentDomino = undefined;
 		
+		}
 		StarDomino(){
 			//raycast
 		
@@ -427,12 +434,12 @@
 			const intersects = raycaster.intersectObjects( this.scene.children );
 			
 			console.log(intersects)
-				if(intersects.length>0 && intersects[ 0 ].object.name=='ground')
-				{
-					this.currentDomino=new Domino(this,-1,intersects[ 0 ].point.x+0.5, 1, intersects[ 0 ].point.z, 0, 0xff69b4);		
-					//intersects[ i ].object.material.color.set( 0xff0000 );
-					
-				}
+			if(intersects.length>0 && intersects[ 0 ].object.name=='ground')
+			{
+				this.currentDomino=new Domino(this,-1,intersects[ 0 ].point.x+0.5, 1, intersects[ 0 ].point.z, 0, 0xff69b4);		
+				//intersects[ i ].object.material.color.set( 0xff0000 );
+				
+			}
 			
 /*
 			for ( let i = 0; i < intersects.length; i ++ ) {
@@ -541,9 +548,12 @@
 			console.log("key:"+e.keyCode)
 			console.log(	e)
 			switch(e.keyCode) {
+			
+				case 13:
+					MyGame.FixDomino();
+				break;
 				case 68:
-				//MyGame.currentDomino=new Domino(MyGame,-2,5, 5, 5, 0, 0xff69b4);
-				MyGame.StarDomino();
+					MyGame.StarDomino();
 				break;
 				case 37: case 38: case 39: case 40:
 				case 32: e.preventDefault(); break;
@@ -670,6 +680,39 @@
 		
 		update() 
 		{
+			//
+			
+			
+			if(this.currentDomino!=undefined)
+			{
+				if((pointer.x!=this.oldPointerX)||(pointer.y!=this.oldPointerY))
+				{
+					this.oldPointerX = pointer.x;
+					this.oldPointerY = pointer.y;
+					
+					const raycaster = new THREE.Raycaster();
+					
+					// update the picking ray with the camera and pointer position
+					raycaster.setFromCamera( pointer, this.camera );
+
+					// calculate objects intersecting the picking ray
+					const intersects = raycaster.intersectObjects( this.scene.children );
+					
+					//console.log(intersects)
+					if(intersects.length>0 && intersects[ 0 ].object.name=='ground')
+					{
+						//this.currentDomino=new Domino(this,-1,intersects[ 0 ].point.x+0.5, 1, intersects[ 0 ].point.z, 0, 0xff69b4);		
+						
+						this.currentDomino.setposition(intersects[ 0 ].point.x+0.5, 1.5, intersects[ 0 ].point.z)
+						
+					}
+					
+					
+					
+					
+				}
+			}
+		
 		}
       }
 
